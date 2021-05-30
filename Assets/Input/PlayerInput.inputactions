@@ -11,7 +11,7 @@
                     "id": "fffb81af-9a74-463a-ae31-940822e1dfdf",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "Press(behavior=2)"
+                    "interactions": "Tap"
                 }
             ],
             "bindings": [
