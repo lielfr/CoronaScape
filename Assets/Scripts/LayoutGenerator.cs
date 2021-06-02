@@ -13,6 +13,7 @@ public class LayoutGenerator : MonoBehaviour
         GameObject firstRoom = Instantiate(prefab, new Vector3(0, 1.22f, 0), Quaternion.identity);
         firstRoom.transform.SetParent(container.transform);
         Renderer renderer = firstRoom.GetComponent<Renderer>();
+        firstRoom.AddComponent<MeshCollider>();
         Debug.Log(renderer.bounds.size);
     }
 
