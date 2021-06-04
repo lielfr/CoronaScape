@@ -13,7 +13,7 @@ public class PotionGenerator : MonoBehaviour
 
     public GameObject floor;
     public GameObject layoutContainer;
-    private float xPosMin, xPosMax, zPosMin, zPosMax, yPos; // Container's bounds
+    private float xPosMin, xPosMax, zPosMin, zPosMax, yPos; // Floor's bounds
 
     void Start()
     {

@@ -4,7 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Potions
+  - GreenPotion
+  - RedPotion
+  - BluePotion
   layers:
   - Default
   - TransparentFX
