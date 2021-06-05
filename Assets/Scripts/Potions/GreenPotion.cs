@@ -5,24 +5,13 @@ using UnityEngine;
 public class GreenPotion : MonoBehaviour
 {
     public GameObject greenPotionPrefab;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Heal Potion Picked");
+            other.GetComponent<PlayerStatsController>().TakeHealingPotion();
             Destroy(greenPotionPrefab);
-            Debug.Log("Green Potion Picked Up");
         }
     }
 }

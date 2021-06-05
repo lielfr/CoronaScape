@@ -5,24 +5,13 @@ using UnityEngine;
 public class BluePotion : MonoBehaviour
 {
     public GameObject bluePotionPrefab;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
+            Debug.Log("Teleportation Potion Picked");
+            other.GetComponent<PlayerStatsController>().TakeTeleportationPotion();
             Destroy(bluePotionPrefab);
-            Debug.Log("Blue Potion Picked Up");
         }
     }
 }
