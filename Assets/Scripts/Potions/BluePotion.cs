@@ -16,4 +16,13 @@ public class BluePotion : MonoBehaviour
     {
         
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            Destroy(bluePotionPrefab);
+            Debug.Log("Blue Potion Picked Up");
+        }
+    }
 }

@@ -16,4 +16,13 @@ public class RedPotion : MonoBehaviour
     {
         
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Destroy(redPotionPrefab);
+            Debug.Log("Red Potion Picked Up");
+        }
+    }
 }
