@@ -12,6 +12,14 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Damage",
+                    "type": "PassThrough",
+                    "id": "ce035eb4-e5db-4b5a-bf6f-76a81680f489",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -113,6 +121,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "35635453-3da8-44cb-b26a-e884a54eabc3",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Damage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

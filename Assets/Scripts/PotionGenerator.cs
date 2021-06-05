@@ -18,11 +18,11 @@ public class PotionGenerator : MonoBehaviour
     void Start()
     {
         MeshRenderer floorRenderer = floor.GetComponent<MeshRenderer>();
-        xPosMin = floorRenderer.bounds.min.x;
-        zPosMin = floorRenderer.bounds.min.z;
-        xPosMax = floorRenderer.bounds.max.x;
-        zPosMax = floorRenderer.bounds.max.z;
-        yPos = floorRenderer.bounds.center.y;
+        xPosMin = floorRenderer.bounds.min.x + 10;
+        zPosMin = floorRenderer.bounds.min.z + 10;
+        xPosMax = floorRenderer.bounds.max.x - 10;
+        zPosMax = floorRenderer.bounds.max.z - 10;
+        yPos = floorRenderer.bounds.min.y;
         StartCoroutine(GeneratePotions());
     }
 

@@ -5,24 +5,13 @@ using UnityEngine;
 public class RedPotion : MonoBehaviour
 {
     public GameObject redPotionPrefab;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Time Potion Picked");
+            other.GetComponent<PlayerStatsController>().TakeTimePotion();
             Destroy(redPotionPrefab);
-            Debug.Log("Red Potion Picked Up");
         }
     }
 }

@@ -5,23 +5,33 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour
 {
-    public float levelTime = 1 * 60 + 30;
     public Text timerText;
-
-    void Start()
+    private float levelTime;
+    private float leftTime;
+    private float potionTime;
+    public void SetLevelTime(float levelTime)
     {
-
+        this.levelTime = levelTime;
+        leftTime = levelTime;
+    }
+    public void SetPotionTime(float potionTime)
+    {
+        this.potionTime = potionTime;
+    }
+    public void TimePotion()
+    {
+        levelTime += potionTime;
     }
 
     void Update()
     {
-        float leftTime = levelTime - Time.time;
-
-        if (leftTime <= 0)
-        {
-            Debug.Log("Game Over");
+        if (leftTime <= 0) { // Need to end the game
+            timerText.text = "00:00";
             return;
         }
+
+
+        leftTime = levelTime - Time.time;
         string currentTime = "";
         int mins = (int)leftTime / 60;
         int secs = (int)leftTime % 60;
