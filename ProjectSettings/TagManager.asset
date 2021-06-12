@@ -9,6 +9,8 @@ TagManager:
   - BluePotion
   - HealthBarFill
   - GameOver
+  - Coin
+  - Box
   layers:
   - Default
   - TransparentFX
