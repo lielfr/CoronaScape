@@ -11,6 +11,7 @@ TagManager:
   - GameOver
   - Coin
   - Box
+  - PatientEnemy
   layers:
   - Default
   - TransparentFX

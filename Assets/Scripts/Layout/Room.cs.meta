@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 64e392aa7963bfe4fba7ca835de50744
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - redPotionPrefab: {fileID: 1000012970591572, guid: 7cafb89b5a0f61f479d0a748962abbbc, type: 3}
+  - bluePotionPrefab: {fileID: 1000013317980782, guid: 2cf6690298568294cb6b655c0a3aeb87, type: 3}
+  - greenPotionPrefab: {fileID: 1000013846074356, guid: 11e31a2ebb4e6e246bcf8c0ba034a031, type: 3}
+  - coinPrefab: {fileID: 3857845487746333218, guid: 74bd6289c8bbbce429dfc04a7ffbc59a, type: 3}
+  - boxPrefab: {fileID: 7494677884193068637, guid: 32299ad7edb16dc438eb418652a077a4, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
