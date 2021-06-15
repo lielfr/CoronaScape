@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Convert = System.Convert;
 using UnityEngine;
 
 public class Room : MonoBehaviour
@@ -34,35 +33,6 @@ public class Room : MonoBehaviour
         zPosMax = position.y + wallWidth / 2 - 1; 
         StartCoroutine(GeneratePotions());
         StartCoroutine(GenerateMoney());
-        GenerateBounds();
-    }
-
-    void StackWalls(Vector3 startPosition, Vector3 direction, long num)
-    {
-        Vector3 defaultDirection = new Vector3(0f, 0f, 1f).normalized;
-        Vector3 currentPosition = startPosition;
-        for (long i = 0; i < num; i++)
-        {
-            GameObject newWall = Instantiate<GameObject>(wallPrefab);
-
-            newWall.transform.Translate(currentPosition);
-            newWall.transform.Rotate(Quaternion.FromToRotation(defaultDirection, direction).eulerAngles);
-            newWall.transform.parent = layoutContainer.transform;
-            currentPosition += direction;
-        }
-    }
-
-    void GenerateBounds()
-    {
-        Vector3 floorBounds = floorContainer.GetComponent<Renderer>().bounds.size;
-        Vector3 cornerA = floorContainer.transform.position - floorBounds / 2;
-        Vector3 cornerB = floorContainer.transform.position + floorBounds / 2;
-        Vector3 cornerC = cornerA + new Vector3(floorBounds.x, 0f, 0f);
-        long coverAmount = Convert.ToInt64(floorContainer.transform.localScale.x * floorContainer.transform.localScale.z);
-        StackWalls(cornerA, new Vector3(0f, 0f, 1f), coverAmount);
-        StackWalls(cornerC, new Vector3(0f, 0f, 1f), coverAmount);
-        StackWalls(cornerB, new Vector3(-1f, 0f, 0f), coverAmount);
-        StackWalls(cornerA, new Vector3(1f, 0f, 0f), coverAmount);
     }
 
     public Vector2 GetPosition()
