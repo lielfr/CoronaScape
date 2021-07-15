@@ -20,6 +20,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Regenerate layout",
+                    "type": "Button",
+                    "id": "3d1a7843-e3f2-4020-9bf4-b522a2bce0a7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -130,6 +138,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Damage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45167a04-52e0-423d-bf86-502379f5edce",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Regenerate layout",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
