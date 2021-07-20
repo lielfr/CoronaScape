@@ -26,8 +26,7 @@ public class ProceduralGenerator : MonoBehaviour
         Utils.StackWalls(wallPrefab, layoutContainer, cornerB, new Vector3(-1f, 0f, 0f), coverAmount);
         Utils.StackWalls(wallPrefab, layoutContainer, cornerA, new Vector3(1f, 0f, 0f), coverAmount);
 
-        Chunk chunk = new Chunk(cornerA, cornerB, this);
-        chunk.Split();
+        Chunk.SplitToWalls(cornerA, cornerB, this);
     }
 
     void Clear()
