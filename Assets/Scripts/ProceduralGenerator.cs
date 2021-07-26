@@ -9,6 +9,8 @@ public class ProceduralGenerator : MonoBehaviour
     public GameObject wallPrefab; 
     public GameObject layoutContainer;
     public GameObject floorContainer;
+
+    List<Hall> halls;
     private void Awake()
     {
         GenerateLayout();
@@ -16,6 +18,7 @@ public class ProceduralGenerator : MonoBehaviour
 
     void GenerateLayout()
     {
+        halls = new List<Hall>();
         Vector3 floorBounds = floorContainer.GetComponent<Renderer>().bounds.size;
         Vector3 cornerA = transform.position;
         Vector3 cornerB = transform.position + floorBounds;
@@ -26,8 +29,7 @@ public class ProceduralGenerator : MonoBehaviour
         Utils.StackWalls(wallPrefab, layoutContainer, cornerB, new Vector3(-1f, 0f, 0f), coverAmount);
         Utils.StackWalls(wallPrefab, layoutContainer, cornerA, new Vector3(1f, 0f, 0f), coverAmount);
 
-        Chunk chunk = new Chunk(cornerA, cornerB, this);
-        chunk.Split();
+        Chunk.SplitToWalls(cornerA, cornerB, this);
     }
 
     void Clear()
@@ -46,5 +48,9 @@ public class ProceduralGenerator : MonoBehaviour
             Clear();
             GenerateLayout();
         }
+    }
+
+    public void AddHall(Hall hall) {
+        halls.Add(hall);
     }
 }
