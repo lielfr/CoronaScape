@@ -10,9 +10,15 @@ public class ProceduralGenerator : MonoBehaviour
     public GameObject layoutContainer;
     public GameObject floorContainer;
 
+    public int[,] layoutMatrix;
+
+    public const int WALL = 1;
+    public const int LAYOUT_DIM = 1000;
+
     List<Hall> halls;
     private void Awake()
     {
+        layoutMatrix = new int[LAYOUT_DIM, LAYOUT_DIM];
         GenerateLayout();
     }
 
@@ -23,13 +29,33 @@ public class ProceduralGenerator : MonoBehaviour
         Vector3 cornerA = transform.position;
         Vector3 cornerB = transform.position + floorBounds;
         Vector3 cornerC = cornerA + new Vector3(floorBounds.x, 0f, 0f);
-        long coverAmount = Convert.ToInt64(floorContainer.transform.localScale.x * floorContainer.transform.localScale.z);
-        Utils.StackWalls(wallPrefab, layoutContainer, cornerA, new Vector3(0f, 0f, 1f), coverAmount);
-        Utils.StackWalls(wallPrefab, layoutContainer, cornerC, new Vector3(0f, 0f, 1f), coverAmount);
-        Utils.StackWalls(wallPrefab, layoutContainer, cornerB, new Vector3(-1f, 0f, 0f), coverAmount);
-        Utils.StackWalls(wallPrefab, layoutContainer, cornerA, new Vector3(1f, 0f, 0f), coverAmount);
 
-        Chunk.SplitToWalls(cornerA, cornerB, this);
+        // Chunk.SplitToWalls(cornerA, cornerB, this);
+
+        for (int i = 0; i < LAYOUT_DIM; i++)
+        {
+            layoutMatrix[0, i] = WALL;
+            layoutMatrix[i, 0] = WALL;
+            layoutMatrix[LAYOUT_DIM - 1, i] = WALL;
+            layoutMatrix[i, LAYOUT_DIM - 1] = WALL;
+        }
+
+        MatrixToScreen();
+    }
+
+    void MatrixToScreen()
+    {
+        Vector3 cornerA = transform.position;
+        for (int i = 0; i < LAYOUT_DIM; i++)
+        {
+            for (int j = 0; j < LAYOUT_DIM; j++)
+            {
+                if (layoutMatrix[i, j] == WALL)
+                {
+                    Utils.StackWalls(wallPrefab, layoutContainer, cornerA + new Vector3((float)i, 0f, (float)j), new Vector3(0f, 0f, 1f), 1);
+                }
+            }
+        }
     }
 
     void Clear()
