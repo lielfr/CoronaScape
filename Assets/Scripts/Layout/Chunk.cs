@@ -11,7 +11,7 @@ public class Chunk
     private Vector2Int lowerRightCorner;
     private ProceduralGenerator generator;
 
-    private const int GAP = 15;
+    private const int GAP = 25;
     private const int HALL_WIDTH = 30;
 
     private static Queue<Chunk> availableChunks = new Queue<Chunk>();
@@ -69,7 +69,7 @@ public class Chunk
         switch (currentSplitDirection)
         {
             case SplitDirection.VERTICAL_SPLIT:
-                splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.x + GAP + HALL_WIDTH, lowerRightCorner.x - GAP - HALL_WIDTH * 2));
+                splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.x + GAP + HALL_WIDTH, lowerRightCorner.x - GAP - HALL_WIDTH));
                 splitEndA = new Vector2Int(splitPosition, upperLeftCorner.y);
                 secondWallOffset.x = HALL_WIDTH;
                 FillWithAndAddWalls(splitEndA, new Vector2Int(splitPosition + HALL_WIDTH, lowerRightCorner.y), ProceduralGenerator.LayoutCell.HALL);
@@ -80,7 +80,7 @@ public class Chunk
                 availableChunks.Enqueue(rightChunk);
                 break;
             case SplitDirection.HORIZONTAL_SPLIT:
-                splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.y + GAP + HALL_WIDTH, lowerRightCorner.y - GAP - HALL_WIDTH * 2));
+                splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.y + GAP + HALL_WIDTH, lowerRightCorner.y - GAP - HALL_WIDTH));
                 splitEndA = new Vector2Int(upperLeftCorner.x, splitPosition);
                 secondWallOffset.y = HALL_WIDTH;
                 FillWithAndAddWalls(splitEndA, new Vector2Int(lowerRightCorner.x, splitPosition + HALL_WIDTH), ProceduralGenerator.LayoutCell.HALL);
@@ -123,7 +123,12 @@ public class Chunk
         {
             for (int j = topLeft.y + 1; j < bottomRight.y; j++)
             {
-                generator.layoutMatrix[i, j] = cellType;
+                try {
+                    generator.layoutMatrix[i, j] = cellType;
+                } catch (System.Exception e)
+                {
+                    Debug.LogErrorFormat("Exception: {0}, i = {1}, j = {2}", e.ToString(), i, j);
+                }
             }
         }
 
