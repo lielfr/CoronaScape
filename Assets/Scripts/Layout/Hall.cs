@@ -6,11 +6,11 @@ using Convert = System.Convert;
 using Math = System.Math;
 
 public class Hall {
-    private Vector3 upperLeftCorner;
-    private Vector3 lowerRightCorner;
+    public Vector2 upperLeftCorner;
+    public Vector2 lowerRightCorner;
     private List<Room> rooms;
 
-    public Hall(Vector3 upperLeftCorner, Vector3 lowerRightCorner)
+    public Hall(Vector2 upperLeftCorner, Vector2 lowerRightCorner)
     {
         this.upperLeftCorner = upperLeftCorner;
         this.lowerRightCorner = lowerRightCorner;

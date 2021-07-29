@@ -17,6 +17,8 @@ public class Chunk
     private static Queue<Chunk> availableChunks = new Queue<Chunk>();
     private static List<Chunk> finalChunks = new List<Chunk>();
 
+    private List<Hall> hallsLeft, hallsRight, hallsDown, hallsUp;
+
     public enum SplitDirection {
         HORIZONTAL_SPLIT,
         VERTICAL_SPLIT
@@ -49,14 +51,16 @@ public class Chunk
         this.upperLeftCorner = upperLeftCorner;
         this.lowerRightCorner = lowerRightCorner;
         this.generator = generator;
+        this.hallsLeft = new List<Hall>();
+        this.hallsRight = new List<Hall>();
+        this.hallsDown = new List<Hall>();
+        this.hallsUp = new List<Hall>();
         this.currentSplitDirection = GetRandomDirection();
     }
 
-    public Chunk(Vector2Int upperLeftCorner, Vector2Int lowerRightCorner, ProceduralGenerator generator, SplitDirection direction)
+    public Chunk(Vector2Int upperLeftCorner, Vector2Int lowerRightCorner, ProceduralGenerator generator, SplitDirection direction) : 
+        this(upperLeftCorner, lowerRightCorner, generator)
     {
-        this.upperLeftCorner = upperLeftCorner;
-        this.lowerRightCorner = lowerRightCorner;
-        this.generator = generator;
         this.currentSplitDirection = direction;
     }
 
@@ -66,6 +70,7 @@ public class Chunk
         var dimensionB = (lowerRightCorner.y - upperLeftCorner.y);
         Vector2Int splitEndA = new Vector2Int(), secondWallOffset = new Vector2Int();
         int splitPosition;
+        Hall newHall;
         switch (currentSplitDirection)
         {
             case SplitDirection.VERTICAL_SPLIT:
@@ -73,28 +78,63 @@ public class Chunk
                 splitEndA = new Vector2Int(splitPosition, upperLeftCorner.y);
                 secondWallOffset.x = HALL_WIDTH;
                 FillWithAndAddWalls(splitEndA, new Vector2Int(splitPosition + HALL_WIDTH, lowerRightCorner.y), ProceduralGenerator.LayoutCell.HALL);
+                newHall = new Hall(splitEndA, new Vector2Int(splitPosition + HALL_WIDTH, lowerRightCorner.y));
                 ConnectAdjacentHalls(splitEndA, new Vector2Int(splitPosition + HALL_WIDTH, lowerRightCorner.y), currentSplitDirection);
                 Chunk leftChunk = new Chunk(upperLeftCorner, new Vector2Int(splitPosition, lowerRightCorner.y), generator, SplitDirection.HORIZONTAL_SPLIT);
                 Chunk rightChunk = new Chunk(new Vector2Int(splitPosition + HALL_WIDTH, upperLeftCorner.y), lowerRightCorner, generator, SplitDirection.HORIZONTAL_SPLIT);
                 availableChunks.Enqueue(leftChunk);
                 availableChunks.Enqueue(rightChunk);
+                leftChunk.hallsLeft.AddRange(hallsLeft);
+                leftChunk.hallsRight.Add(newHall);
+                rightChunk.hallsRight.AddRange(hallsRight);
+                rightChunk.hallsLeft.Add(newHall);
+                DistributeHallsVertical(hallsUp, leftChunk.hallsUp, rightChunk.hallsUp, splitPosition, upperLeftCorner, lowerRightCorner);
+                DistributeHallsVertical(hallsDown, leftChunk.hallsDown, rightChunk.hallsDown, splitPosition, upperLeftCorner, lowerRightCorner);
                 break;
             case SplitDirection.HORIZONTAL_SPLIT:
                 splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.y + GAP + HALL_WIDTH, lowerRightCorner.y - GAP - HALL_WIDTH));
                 splitEndA = new Vector2Int(upperLeftCorner.x, splitPosition);
                 secondWallOffset.y = HALL_WIDTH;
                 FillWithAndAddWalls(splitEndA, new Vector2Int(lowerRightCorner.x, splitPosition + HALL_WIDTH), ProceduralGenerator.LayoutCell.HALL);
+                newHall = new Hall(splitEndA, new Vector2Int(lowerRightCorner.x, splitPosition + HALL_WIDTH));
                 ConnectAdjacentHalls(splitEndA, new Vector2Int(lowerRightCorner.x, splitPosition + HALL_WIDTH), currentSplitDirection);
                 Chunk topChunk = new Chunk(upperLeftCorner, new Vector2Int(lowerRightCorner.x, splitPosition), generator, SplitDirection.VERTICAL_SPLIT);
                 Chunk bottomChunk = new Chunk(new Vector2Int(upperLeftCorner.x, splitPosition + HALL_WIDTH), lowerRightCorner, generator, SplitDirection.VERTICAL_SPLIT);
                 availableChunks.Enqueue(topChunk);
                 availableChunks.Enqueue(bottomChunk);
+                topChunk.hallsUp.AddRange(hallsUp);
+                topChunk.hallsDown.Add(newHall);
+                bottomChunk.hallsDown.AddRange(hallsDown);
+                bottomChunk.hallsUp.Add(newHall);
+                DistributeHallsHorizontal(hallsLeft, topChunk.hallsLeft, bottomChunk.hallsLeft, splitPosition, upperLeftCorner, lowerRightCorner);
+                DistributeHallsHorizontal(hallsRight, topChunk.hallsRight, bottomChunk.hallsRight, splitPosition, upperLeftCorner, lowerRightCorner);
                 break;
         }
         // Utils.StackWalls(generator.wallPrefab, generator.layoutContainer, splitEndA, wallDirection, wallAmount);
         // Utils.StackWalls(generator.wallPrefab, generator.layoutContainer, splitEndA + secondWallOffset, wallDirection, wallAmount);
 
         // generator.AddHall(new Hall(splitEndA, splitEndA + secondWallOffset + wallDirection * wallAmount));
+    }
+
+    private void DistributeHallsVertical(List<Hall> sourceList, List<Hall> leftTarget, List<Hall> rightTarget, int splitPosition, Vector2Int upperLeftCorner, Vector2Int lowerRightCorner)
+    {
+        foreach (var item in sourceList)
+        {
+            if (item.upperLeftCorner.x >= upperLeftCorner.x || item.lowerRightCorner.x <= splitPosition)
+                leftTarget.Add(item);
+            if (item.upperLeftCorner.x > splitPosition + HALL_WIDTH || item.lowerRightCorner.x <= lowerRightCorner.x)
+                rightTarget.Add(item);
+        } 
+    }
+    private void DistributeHallsHorizontal(List<Hall> sourceList, List<Hall> topTarget, List<Hall> bottomTarget, int splitPosition, Vector2Int upperLeftCorner, Vector2Int lowerRightCorner)
+    {
+        foreach (var item in sourceList)
+        {
+            if (item.upperLeftCorner.y >= upperLeftCorner.y || item.lowerRightCorner.y <= splitPosition)
+                topTarget.Add(item);
+            if (item.upperLeftCorner.y > splitPosition + HALL_WIDTH || item.lowerRightCorner.y <= lowerRightCorner.y)
+                bottomTarget.Add(item);
+        } 
     }
 
     public static void SplitToWalls(Vector2Int upperLeftCorner, Vector2Int lowerRightCorner, ProceduralGenerator generator, int roomAmount)
