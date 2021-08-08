@@ -9,7 +9,7 @@ public class Chunk
 {
     private Vector2Int upperLeftCorner;
     private Vector2Int lowerRightCorner;
-    private ProceduralGenerator generator;
+    private static ProceduralGenerator generator;
 
     private const int GAP = 25;
     private const int HALL_WIDTH = 30;
@@ -50,7 +50,7 @@ public class Chunk
     {
         this.upperLeftCorner = upperLeftCorner;
         this.lowerRightCorner = lowerRightCorner;
-        this.generator = generator;
+        Chunk.generator = generator;
         this.hallsLeft = new List<Hall>();
         this.hallsRight = new List<Hall>();
         this.hallsDown = new List<Hall>();
@@ -139,6 +139,7 @@ public class Chunk
 
     public static void SplitToWalls(Vector2Int upperLeftCorner, Vector2Int lowerRightCorner, ProceduralGenerator generator, int roomAmount)
     {
+        finalChunks.Clear();
         availableChunks.Clear();
         Chunk initialChunk = new Chunk(upperLeftCorner, lowerRightCorner, generator);
         availableChunks.Enqueue(initialChunk);
@@ -154,6 +155,10 @@ public class Chunk
             {
                 finalChunks.Add(currentChunk);
             }
+        }
+        while (availableChunks.Count > 0)
+        {
+            finalChunks.Add(availableChunks.Dequeue());
         }
     }
 
@@ -225,6 +230,20 @@ public class Chunk
                         generator.layoutMatrix[bottomRight.x, j] = ProceduralGenerator.LayoutCell.HALL;
                 }
             }
+        }
+    }
+    
+    public static void AddLights()
+    {
+        Debug.Log("Trying to add lights, got: " + finalChunks.Count + " chunks");
+        foreach (Chunk chunk in finalChunks)
+        {
+            int dimensionA = (chunk.lowerRightCorner.x - chunk.upperLeftCorner.x);
+            int dimensionB = (chunk.lowerRightCorner.y - chunk.upperLeftCorner.y);
+            int lightX = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionA) / 2));
+            int lightY = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionB) / 2));
+            var lightPosition = chunk.upperLeftCorner + new Vector2Int(lightX, lightY);
+            generator.AddLightAt(lightPosition);
         }
     }
 }

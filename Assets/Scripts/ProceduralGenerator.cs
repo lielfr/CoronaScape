@@ -9,6 +9,9 @@ public class ProceduralGenerator : MonoBehaviour
     public GameObject wallPrefab; 
     public GameObject layoutContainer;
     public GameObject floorContainer;
+    public GameObject lightPrefab;
+
+    public int wallHeight = 4;
 
     private object matrixLock;
 
@@ -67,6 +70,7 @@ public class ProceduralGenerator : MonoBehaviour
 
             MatrixToScreen();
         }
+        Chunk.AddLights();
     }
 
     void MatrixToScreen()
@@ -108,5 +112,12 @@ public class ProceduralGenerator : MonoBehaviour
 
     public void AddHall(Hall hall) {
         halls.Add(hall);
+    }
+
+    public void AddLightAt(Vector2Int pos)
+    {
+        var newLight = Instantiate<GameObject>(lightPrefab);
+        newLight.transform.parent = layoutContainer.transform;
+        newLight.transform.Translate(layoutContainer.transform.position + new Vector3(pos.x, wallHeight - 0.5f, pos.y));
     }
 }
