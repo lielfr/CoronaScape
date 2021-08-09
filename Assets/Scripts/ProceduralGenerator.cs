@@ -11,7 +11,7 @@ public class ProceduralGenerator : MonoBehaviour
     public GameObject floorContainer;
     public GameObject lightPrefab;
 
-    public int wallHeight = 4;
+    public int wallHeight = 30;
 
     private object matrixLock;
 
@@ -114,9 +114,12 @@ public class ProceduralGenerator : MonoBehaviour
         halls.Add(hall);
     }
 
-    public void AddLightAt(Vector2Int pos)
+    public void AddLightAt(Vector2Int pos, int minDim, int roomSize)
     {
         var newLight = Instantiate<GameObject>(lightPrefab);
+        Light lightObject = newLight.transform.GetComponentInChildren<Light>();
+        lightObject.intensity = roomSize;
+        lightObject.range = minDim;
         newLight.transform.parent = layoutContainer.transform;
         newLight.transform.Translate(layoutContainer.transform.position + new Vector3(pos.x, wallHeight - 0.5f, pos.y));
     }

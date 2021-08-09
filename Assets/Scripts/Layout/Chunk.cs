@@ -232,18 +232,18 @@ public class Chunk
             }
         }
     }
-    
+
     public static void AddLights()
     {
         Debug.Log("Trying to add lights, got: " + finalChunks.Count + " chunks");
-        foreach (Chunk chunk in finalChunks)
-        {
-            int dimensionA = (chunk.lowerRightCorner.x - chunk.upperLeftCorner.x);
-            int dimensionB = (chunk.lowerRightCorner.y - chunk.upperLeftCorner.y);
-            int lightX = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionA) / 2));
-            int lightY = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionB) / 2));
-            var lightPosition = chunk.upperLeftCorner + new Vector2Int(lightX, lightY);
-            generator.AddLightAt(lightPosition);
-        }
+        // foreach (Chunk chunk in finalChunks)
+        // {
+        //     int dimensionA = (chunk.lowerRightCorner.x - chunk.upperLeftCorner.x);
+        //     int dimensionB = (chunk.lowerRightCorner.y - chunk.upperLeftCorner.y);
+        //     int lightX = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionA) / 2));
+        //     int lightY = Convert.ToInt32(Math.Round(Convert.ToDecimal(dimensionB) / 2));
+        //     var lightPosition = chunk.upperLeftCorner + new Vector2Int(lightX, lightY);
+        //     generator.AddLightAt(lightPosition, Math.Max(dimensionA, dimensionB), chunk.GetSize());
+        // }
     }
 }
