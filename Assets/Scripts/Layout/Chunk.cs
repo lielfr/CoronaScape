@@ -235,7 +235,7 @@ public class Chunk
 
     public static void AddLights()
     {
-        Debug.Log("Trying to add lights, got: " + finalChunks.Count + " chunks");
+        // Debug.Log("Trying to add lights, got: " + finalChunks.Count + " chunks");
         // foreach (Chunk chunk in finalChunks)
         // {
         //     int dimensionA = (chunk.lowerRightCorner.x - chunk.upperLeftCorner.x);
