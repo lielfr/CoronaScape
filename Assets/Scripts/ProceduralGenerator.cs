@@ -11,6 +11,12 @@ public class ProceduralGenerator : MonoBehaviour
     public GameObject floorContainer;
     public GameObject lightPrefab;
 
+    public GameObject redPotionPrefab;
+    public GameObject bluePotionPrefab;
+    public GameObject greenPotionPrefab;
+    public GameObject coinPrefab;
+    public GameObject boxPrefab;
+
     public int wallHeight = 30;
 
     private object matrixLock;
@@ -70,6 +76,7 @@ public class ProceduralGenerator : MonoBehaviour
 
             MatrixToScreen();
         }
+        PopulateRooms();
         Chunk.AddLights();
     }
 
@@ -122,5 +129,15 @@ public class ProceduralGenerator : MonoBehaviour
         lightObject.range = minDim;
         newLight.transform.parent = layoutContainer.transform;
         newLight.transform.Translate(layoutContainer.transform.position + new Vector3(pos.x, wallHeight - 0.5f, pos.y));
+    }
+
+    public void PopulateRooms()
+    {
+        var offset = new Vector2Int(Convert.ToInt32(transform.position.x), Convert.ToInt32(transform.position.z));
+        foreach (var chunk in Chunk.finalChunks)
+        {
+            
+            var newRoom = new Room(offset + chunk.GetUpperLeftCorner(),offset + chunk.GetLowerRightCorner(), this, redPotionPrefab, bluePotionPrefab, greenPotionPrefab, coinPrefab, boxPrefab);
+        }
     }
 }

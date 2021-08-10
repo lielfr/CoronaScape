@@ -15,7 +15,7 @@ public class Chunk
     private const int HALL_WIDTH = 30;
 
     private static Queue<Chunk> availableChunks = new Queue<Chunk>();
-    private static List<Chunk> finalChunks = new List<Chunk>();
+    public static List<Chunk> finalChunks = new List<Chunk>();
 
     private List<Hall> hallsLeft, hallsRight, hallsDown, hallsUp;
 
@@ -245,5 +245,15 @@ public class Chunk
         //     var lightPosition = chunk.upperLeftCorner + new Vector2Int(lightX, lightY);
         //     generator.AddLightAt(lightPosition, Math.Max(dimensionA, dimensionB), chunk.GetSize());
         // }
+    }
+
+    public Vector2Int GetUpperLeftCorner()
+    {
+        return upperLeftCorner;
+    }
+
+    public Vector2Int GetLowerRightCorner()
+    {
+        return lowerRightCorner;
     }
 }

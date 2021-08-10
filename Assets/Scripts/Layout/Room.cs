@@ -2,16 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Room : MonoBehaviour
+public class Room
 {
-    private Vector2 position;
-    private Wall[] walls;
-    private float wallWidth = 8f;
-    private float wallHight = 4f;
 
     // These numbers will later be based on difficulty
-    private int potionsQuantity = 4;
-    private int moneyQuantity = 2;
+    private int potionsQuantity = 40;
+    private int moneyQuantity = 20;
     /* ---------- Necessary prefabs ---------- */
     public GameObject redPotionPrefab;
     public GameObject bluePotionPrefab;
@@ -25,47 +21,27 @@ public class Room : MonoBehaviour
     private enum moneyTypes { COIN = 1, BOX = 2 };
     private int moneyTypesQuantity = 2;
 
-    void Start()
+    private const int GAP = 2;
+
+    private ProceduralGenerator generator;
+
+    public  Room(Vector2Int topLeftCorner, Vector2Int bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
-        xPosMin = position.x - wallWidth / 2 + 1;
-        zPosMin = position.y - wallWidth / 2 + 1;
-        xPosMax = position.x + wallWidth / 2 - 1;
-        zPosMax = position.y + wallWidth / 2 - 1; 
-        StartCoroutine(GeneratePotions());
-        StartCoroutine(GenerateMoney());
+        xPosMin = topLeftCorner.x - GAP;
+        zPosMin = topLeftCorner.y - GAP;
+        xPosMax = bottomRightCorner.x - GAP;
+        zPosMax = bottomRightCorner.y - GAP;
+        this.generator = generator;
+        this.redPotionPrefab = redPotionPrefab;
+        this.bluePotionPrefab = bluePotionPrefab;
+        this.greenPotionPrefab = greenPotionPrefab;
+        this.coinPrefab = coinPrefab;
+        this.boxPrefab = boxPrefab;
+        GeneratePotions();
+        GenerateMoney();
     }
 
-    public Vector2 GetPosition()
-    {
-        return position;
-    }
-
-    public void SetPosition(Vector2 position)
-    {
-        this.position = position;
-    }
-
-    public Wall[] GetWalls()
-    {
-        return walls;
-    }
-
-    public void SetWalls(Wall[] walls)
-    {
-        this.walls = walls;
-    }
-
-    public float GetWallWidth()
-    {
-        return wallWidth;
-    }
-
-    public float GetWallHight()
-    {
-        return wallHight;
-    }
-
-    IEnumerator GeneratePotions()
+    void GeneratePotions()
     {
         int currentPotionsQuantity = 0;
         while (currentPotionsQuantity < potionsQuantity)
@@ -73,34 +49,32 @@ public class Room : MonoBehaviour
             float xRandomPos = Random.Range(xPosMin, xPosMax);
             float zRandomPos = Random.Range(zPosMin, zPosMax);
             potionTypes potionType = (potionTypes)Random.Range(1, potionTypesQuantity + 1);
+            GameObject generatedPotion;
             switch (potionType)
             {
                 case potionTypes.BLUE:
                     {
-                        GameObject generatedPotion = Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedPotion.transform.parent = transform;
+                        generatedPotion = GameObject.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
                 case potionTypes.RED:
                     {
-                        GameObject generatedPotion = Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedPotion.transform.parent = transform;
+                        generatedPotion = GameObject.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
-                case potionTypes.GREEN:
+                default:
                     {
-                        GameObject generatedPotion = Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedPotion.transform.parent = transform;
+                        // Used default here just to suppress the annoying uninitialized local variable error.
+                        generatedPotion = GameObject.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
             }
-
-            yield return new WaitForSeconds(5f);
+            generatedPotion.transform.parent = generator.transform;
             currentPotionsQuantity++;
         }
     }
 
-    IEnumerator GenerateMoney()
+    void GenerateMoney()
     {
         int currentMoneyQuantity = 0;
         while (currentMoneyQuantity < moneyQuantity)
@@ -112,18 +86,17 @@ public class Room : MonoBehaviour
             {
                 case moneyTypes.COIN:
                     {
-                        GameObject generatedMoney = Instantiate(coinPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedMoney.transform.parent = transform;
+                        GameObject generatedMoney = GameObject.Instantiate(coinPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedMoney.transform.parent = generator.transform;
                         break;
                     }
                 case moneyTypes.BOX:
                     {
-                        GameObject generatedMoney = Instantiate(boxPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedMoney.transform.parent = transform;
+                        GameObject generatedMoney = GameObject.Instantiate(boxPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedMoney.transform.parent = generator.transform;
                         break;
                     }
             }
-            yield return new WaitForSeconds(10f);
             currentMoneyQuantity++;
         }
     }
