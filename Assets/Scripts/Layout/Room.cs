@@ -21,7 +21,7 @@ public class Room
     private enum moneyTypes { COIN = 1, BOX = 2 };
     private int moneyTypesQuantity = 2;
 
-    private const int GAP = 2;
+    private const int GAP = 5;
 
     private ProceduralGenerator generator;
 
