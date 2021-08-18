@@ -91,7 +91,7 @@ public class Chunk
                 DistributeHallsVertical(hallsUp, leftChunk.hallsUp, rightChunk.hallsUp, splitPosition, upperLeftCorner, lowerRightCorner);
                 DistributeHallsVertical(hallsDown, leftChunk.hallsDown, rightChunk.hallsDown, splitPosition, upperLeftCorner, lowerRightCorner);
                 break;
-            case SplitDirection.HORIZONTAL_SPLIT:
+            default:
                 splitPosition = Convert.ToInt32(Random.Range(upperLeftCorner.y + GAP + HALL_WIDTH, lowerRightCorner.y - GAP - HALL_WIDTH));
                 splitEndA = new Vector2Int(upperLeftCorner.x, splitPosition);
                 secondWallOffset.y = HALL_WIDTH;
@@ -110,10 +110,7 @@ public class Chunk
                 DistributeHallsHorizontal(hallsRight, topChunk.hallsRight, bottomChunk.hallsRight, splitPosition, upperLeftCorner, lowerRightCorner);
                 break;
         }
-        // Utils.StackWalls(generator.wallPrefab, generator.layoutContainer, splitEndA, wallDirection, wallAmount);
-        // Utils.StackWalls(generator.wallPrefab, generator.layoutContainer, splitEndA + secondWallOffset, wallDirection, wallAmount);
-
-        // generator.AddHall(new Hall(splitEndA, splitEndA + secondWallOffset + wallDirection * wallAmount));
+        generator.AddHall(newHall);
     }
 
     private void DistributeHallsVertical(List<Hall> sourceList, List<Hall> leftTarget, List<Hall> rightTarget, int splitPosition, Vector2Int upperLeftCorner, Vector2Int lowerRightCorner)

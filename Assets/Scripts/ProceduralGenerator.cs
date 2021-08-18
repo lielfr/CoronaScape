@@ -27,7 +27,8 @@ public class ProceduralGenerator : MonoBehaviour
         WALL,
         HALL,
         CHUNK,
-        ROOM
+        DOOR,
+        ELEVATOR
     }
 
     public LayoutCell[,] layoutMatrix;
@@ -66,7 +67,6 @@ public class ProceduralGenerator : MonoBehaviour
     {
         lock(matrixLock)
         {
-            halls = new List<Hall>();
             Vector3 floorBounds = floorContainer.GetComponent<Renderer>().bounds.size;
             Vector2Int cornerA = new Vector2Int(0, 0);
             Vector2Int cornerB = new Vector2Int(LAYOUT_DIM - 1, LAYOUT_DIM - 1);
@@ -82,6 +82,8 @@ public class ProceduralGenerator : MonoBehaviour
             }
 
             Chunk.SplitToWalls(cornerA, cornerB, this, roomAmount);
+
+            PlaceElevators();
 
             MatrixToScreen();
         }
@@ -164,5 +166,13 @@ public class ProceduralGenerator : MonoBehaviour
             var playerZ = Random.Range(selectedRoom.GetZMin(), selectedRoom.GetZMax());
             playerObject.transform.position = new Vector3(playerX, playerObject.transform.position.y, playerZ);
         }
+    }
+
+    void PlaceElevators()
+    {
+        // Select random hall
+        // Select edge (make sure it actually exists!)
+        // Select random position on the edge
+        // Place elevator
     }
 }
