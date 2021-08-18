@@ -27,8 +27,8 @@ public class Room
 
     public  Room(Vector2Int topLeftCorner, Vector2Int bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
-        xPosMin = topLeftCorner.x - GAP;
-        zPosMin = topLeftCorner.y - GAP;
+        xPosMin = topLeftCorner.x + GAP;
+        zPosMin = topLeftCorner.y + GAP;
         xPosMax = bottomRightCorner.x - GAP;
         zPosMax = bottomRightCorner.y - GAP;
         this.generator = generator;
@@ -99,5 +99,22 @@ public class Room
             }
             currentMoneyQuantity++;
         }
+    }
+
+    public float GetXMin()
+    {
+        return xPosMin;
+    }
+    public float GetXMax()
+    {
+        return xPosMax;
+    }
+    public float GetZMin()
+    {
+        return zPosMin;
+    }
+    public float GetZMax()
+    {
+        return zPosMax;
     }
 }

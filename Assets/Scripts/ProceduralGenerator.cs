@@ -33,11 +33,20 @@ public class ProceduralGenerator : MonoBehaviour
     public LayoutCell[,] layoutMatrix;
     public const int LAYOUT_DIM = 1000;
 
+    public GameObject playerObject;
+
+    private GameManager gameManager;
+
     List<Hall> halls;
+
+    List<Room> rooms;
     private void Awake()
     {
+        rooms = new List<Room>();
+        halls = new List<Hall>();
         matrixLock = new object();
         layoutMatrix = new LayoutCell[LAYOUT_DIM, LAYOUT_DIM];
+        gameManager = GameManager.GetInstance();
         ResetLayoutMatrix();
         GenerateLayout();
     }
@@ -77,7 +86,8 @@ public class ProceduralGenerator : MonoBehaviour
             MatrixToScreen();
         }
         PopulateRooms();
-        Chunk.AddLights();
+        PlacePlayer();
+        // Chunk.AddLights();
     }
 
     void MatrixToScreen()
@@ -105,6 +115,9 @@ public class ProceduralGenerator : MonoBehaviour
             }
             ResetLayoutMatrix();
         }
+        halls.Clear();
+        rooms.Clear();
+        gameManager.RestartGame();
     }
 
     public void OnRegenerateAction(InputAction.CallbackContext context)
@@ -136,8 +149,20 @@ public class ProceduralGenerator : MonoBehaviour
         var offset = new Vector2Int(Convert.ToInt32(transform.position.x), Convert.ToInt32(transform.position.z));
         foreach (var chunk in Chunk.finalChunks)
         {
-            
-            var newRoom = new Room(offset + chunk.GetUpperLeftCorner(),offset + chunk.GetLowerRightCorner(), this, redPotionPrefab, bluePotionPrefab, greenPotionPrefab, coinPrefab, boxPrefab);
+            rooms.Add(new Room(offset + chunk.GetUpperLeftCorner(), offset + chunk.GetLowerRightCorner(), this, redPotionPrefab, bluePotionPrefab, greenPotionPrefab, coinPrefab, boxPrefab));
+        }
+    }
+
+    void PlacePlayer()
+    {
+        var offset = new Vector2(transform.position.x, transform.position.z);
+        if (gameManager.GetLevel() == 1)
+        {
+            var roomIndex = Random.Range(0, rooms.Count);
+            var selectedRoom = rooms[roomIndex];
+            var playerX = Random.Range(selectedRoom.GetXMin(), selectedRoom.GetXMax());
+            var playerZ = Random.Range(selectedRoom.GetZMin(), selectedRoom.GetZMax());
+            playerObject.transform.position = new Vector3(playerX, playerObject.transform.position.y, playerZ);
         }
     }
 }
