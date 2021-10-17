@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: f1c44f1822f054aa1a4318960e2a2db4
-  m_SerializeEntries:
-  - m_GUID: 0bd9cc9383da64c7f8965e073bd68d81
-    m_Address: Assets/Models/Room_one_exit.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 919132149155446097, guid: 0bd9cc9383da64c7f8965e073bd68d81, type: 3}
-    m_TargetAsset: {fileID: 919132149155446097, guid: 0bd9cc9383da64c7f8965e073bd68d81, type: 3}
-  - m_GUID: 2ae57eb5a6f22412dba74466f8901a47
-    m_Address: Assets/Models/wall.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 001ad273fbd1f40c68d216e72509e734, type: 2}
   m_SchemaSet:
