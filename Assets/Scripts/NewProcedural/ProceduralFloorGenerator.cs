@@ -72,7 +72,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
         {
             mesh = baseMesh,
             subMeshIndex = 0,
-            transform = Matrix4x4.identity
+            transform = Matrix4x4.Rotate(Quaternion.Euler(0, Random.Range(0f, 360f), 0))
         };
         combineInstances.Add(baseCombineInstance);
 
