@@ -102,7 +102,24 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Vector3 newCenter = direction ? (baseTopLeft + offset * diag1) : (baseTopRight + offset * diag2);
 
-        return NewRectCenter(newCenter, width, height, Random.Range(0f, 90f));
+        Mesh ret = NewRectCenter(newCenter, width, height, Random.Range(0f, 90f));
+
+        newCenter = ret.vertices[0] + (ret.vertices[2] - ret.vertices[0]);
+
+        float translationMagnitude = Random.Range(0f, 1f);
+
+        Matrix4x4 translationMatrix = Matrix4x4.Translate(translationMagnitude * (newCenter - baseCenterPoint));
+
+        List<Vector3> afterTranslation = new List<Vector3>();
+
+        foreach (Vector3 v in ret.vertices)
+        {
+            afterTranslation.Add(translationMatrix * v);
+        }
+
+        ret.vertices = afterTranslation.ToArray();
+
+        return ret;
     }
 
     public void Clear()
