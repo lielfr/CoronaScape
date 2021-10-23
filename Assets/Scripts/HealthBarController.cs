@@ -17,7 +17,6 @@ public class HealthBarController : MonoBehaviour
     private float maxHealth;
     #endregion
 
-
     public void Init(float value)
     {
         maxHealth = value;

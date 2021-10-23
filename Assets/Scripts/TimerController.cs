@@ -16,7 +16,6 @@ public class TimerController : MonoBehaviour
     private float remaining;
     #endregion
 
-
     void Update()
     {
         if(isRunning)
@@ -32,7 +31,7 @@ public class TimerController : MonoBehaviour
 
     public void Init(float value) 
     {
-        remaining = value + 1;
+        remaining = ++value;
         isRunning = true;
     }
 

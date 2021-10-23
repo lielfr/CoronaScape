@@ -35,10 +35,10 @@ public class PlayerStatsController : MonoBehaviour
     private void Start()
     {
         score = GetComponent<ScoreController>();
-        healthBar = GetComponent<HealthBarController>();
-        timer = GetComponent<TimerController>();
         score.Init();
+        healthBar = GetComponent<HealthBarController>();
         healthBar.Init(health);
+        timer = GetComponent<TimerController>();
         timer.Init(levelTime);
     }
 
@@ -64,8 +64,8 @@ public class PlayerStatsController : MonoBehaviour
             case PotionType.RED:
                 timer.AddTime(timePotion);
                 break;
-            case PotionType.GREEN: 
-                healthBar.AddHealth(Random.Range(0f, maxHeal)); 
+            case PotionType.GREEN:
+                healthBar.AddHealth(Random.Range(0f, maxHeal));
                 break;
             case PotionType.BLUE: break;
             default: break;
