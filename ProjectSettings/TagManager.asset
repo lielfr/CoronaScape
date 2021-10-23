@@ -12,6 +12,7 @@ TagManager:
   - Coin
   - Box
   - PatientEnemy
+  - Enemy
   layers:
   - Default
   - TransparentFX

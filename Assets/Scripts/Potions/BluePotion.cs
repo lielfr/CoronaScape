@@ -1,17 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameEnums;
 
-public class BluePotion : MonoBehaviour
+public class BluePotion : Potion
 {
-    public GameObject bluePotionPrefab;
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Teleportation Potion Picked");
-            other.GetComponent<PlayerStatsController>().TakeTeleportationPotion();
-            Destroy(bluePotionPrefab);
-        }
-    }
+    public override PotionType Type => PotionType.BLUE;
 }

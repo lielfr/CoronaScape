@@ -5,45 +5,45 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour
 {
-    public Text timerText;
-    private float levelTime;
-    private float leftTime;
-    private float potionTime;
-    public void SetLevelTime(float levelTime)
-    {
-        this.levelTime = levelTime;
-        leftTime = levelTime;
-    }
-    public void SetPotionTime(float potionTime)
-    {
-        this.potionTime = potionTime;
-    }
-    public void TimePotion()
-    {
-        levelTime += potionTime;
-    }
+    #region Private Fields
+    [SerializeField]
+    private Text timerText;
+
+    [SerializeField]
+    private bool isRunning = false;
+
+    [SerializeField]
+    private float remaining;
+    #endregion
 
     void Update()
     {
-        if (leftTime <= 0) { // Need to end the game
-            timerText.text = "00:00";
-            return;
+        if(isRunning)
+        {
+            remaining -= Time.deltaTime;
         }
+        if (remaining <= 0) {
+            remaining = 0;
+            isRunning = false;
+        }
+        SetText(remaining);
+    }
 
+    public void Init(float value) 
+    {
+        remaining = ++value;
+        isRunning = true;
+    }
 
-        leftTime = levelTime - Time.time;
-        string currentTime = "";
-        int mins = (int)leftTime / 60;
-        int secs = (int)leftTime % 60;
-        if (mins < 10)
-            currentTime += "0";
+    public void AddTime(float value)
+    {
+        remaining += value;
+    }
 
-        currentTime += mins.ToString() + ":";
-
-        if (secs < 10)
-            currentTime += "0";
-
-        currentTime += secs.ToString();
-        timerText.text = currentTime;
+    void SetText(float value)
+    {
+        float mins = Mathf.FloorToInt(value / 60);
+        float secs = Mathf.FloorToInt(value % 60);
+        timerText.text = $"{mins:00}" + ":" + $"{secs:00}";
     }
 }

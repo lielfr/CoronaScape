@@ -1,70 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBarController : MonoBehaviour
 {
-    /* HealthBar characteristics*/
-    public Slider healthSlider;
-    public Image currentHealthFill;
-    private float maxHealth;
+    #region Private Fields
     private float currentHealth;
     private bool isEmpty;
-    /* Game influence on HealthBar */
-    private float healingPotion;
-    private float punchDamage;
 
-    public void SetMaxHealth(float maxHealth)
+    [SerializeField]
+    private Slider slider;
+
+    [SerializeField]
+    private Image fill;
+
+    [SerializeField]
+    private float maxHealth;
+    #endregion
+
+    public void Init(float value)
     {
-        this.maxHealth = maxHealth;
+        maxHealth = value;
+        currentHealth = value;
+        isEmpty = currentHealth <= 0;
+        SetFill();
     }
-    public void SetPotionHeal(float healingPotion)
+
+    public void AddHealth(float value)
     {
-        this.healingPotion = healingPotion;
+        currentHealth += value;
+        SetFill();
     }
-    public void SetPunchDamage(float punchDamage)
+
+    private void SetFill()
     {
-        this.punchDamage = punchDamage;
-    }
-    public void Init()
-    {
-        currentHealth = maxHealth;
-        SetCurrentHealthFill();
-    }
-    public void HealingPotion()
-    {
-        currentHealth += healingPotion;
-        if(currentHealth > maxHealth)
-            currentHealth = maxHealth;
-        SetCurrentHealthFill();
-    }
-    public void PunchDamage()
-    {
-        currentHealth -= punchDamage;
-        SetCurrentHealthFill();
-    }
-    private void SetCurrentHealthFill()
-    {
-        if(isEmpty) // Think about a better way...
+        if (isEmpty) // Think about a better way...
             return;
 
-        healthSlider.value = currentHealth;
-        if(healthSlider.value > 0)
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
+        slider.value = currentHealth;
+        if (slider.value > 0)
         {
-            if(currentHealth <= maxHealth && currentHealth > maxHealth / 2)
-                currentHealthFill.color = Color.green;
+            if (currentHealth <= maxHealth && currentHealth > maxHealth / 2)
+                fill.color = Color.green;
             else
             {
-                if(currentHealth <= maxHealth / 2 && currentHealth > maxHealth / 4)
-                    currentHealthFill.color = Color.yellow;
+                if (currentHealth <= maxHealth / 2 && currentHealth > maxHealth / 4)
+                    fill.color = Color.yellow;
                 else
-                    currentHealthFill.color = Color.red;
+                    fill.color = Color.red;
             }
         }
-        else {
-            healthSlider.value = maxHealth;
-            currentHealthFill.color = Color.black;
+        else
+        {
+            slider.value = maxHealth;
+            fill.color = Color.black;
             isEmpty = true;
         }
     }

@@ -1,73 +1,80 @@
-using System.Collections;
-using System.Collections.Generic;
+using GameEnums;
 using UnityEngine;
 
 public class PlayerStatsController : MonoBehaviour
 {
-    /* Player score stats */
+    #region Score
     private ScoreController score;
-    private int coinScore = 5;
-    private int boxMaxScore = 25;
-    private int patientKill = 25;
-    private int nurseKill = 50;
-    private int doctorKill = 100;
-    private int guardKill = 200;
-    /* Player health stats */
-    public HealthBarController healthBar;
-    private float maxHealth = 100;
-    private float healingPotion = 20;
-    private float punchDamage = 5;
-    /* Player time stats */
-    private TimerController timer;
-    private float levelTime = 60 * 5 + 30;
-    private float timePotion = 30;
-    /* Player teleportation stats */
-    private int initialTeleportation = 10;
-    private int currentTeleportation;
 
-    void Start()
+    [SerializeField]
+    private int coinScore = 5;
+    [SerializeField]
+    private int boxScore = 25;
+    #endregion
+
+    #region Health
+    private HealthBarController healthBar;
+
+    [SerializeField]
+    private float health = 100f;
+    [SerializeField]
+    private float maxHeal = 15f;
+    [SerializeField]
+    private float maxDamage = 10f;
+    #endregion
+
+    #region Time
+    private TimerController timer;
+
+    [SerializeField]
+    private float levelTime = 60 * 5 + 30;
+    [SerializeField]
+    private float timePotion = 30;
+    #endregion
+
+    private void Start()
     {
         score = GetComponent<ScoreController>();
-        score.SetCoinScore(coinScore);
-        score.SetBoxMaxScore(boxMaxScore);
-        healthBar.SetMaxHealth(maxHealth);
-        healthBar.SetPotionHeal(healingPotion);
-        healthBar.SetPunchDamage(punchDamage);
-        healthBar.Init();
+        score.Init();
+        healthBar = GetComponent<HealthBarController>();
+        healthBar.Init(health);
         timer = GetComponent<TimerController>();
-        timer.SetLevelTime(levelTime);
-        timer.SetPotionTime(timePotion);
-        currentTeleportation = initialTeleportation;
+        timer.Init(levelTime);
     }
 
-    public void TakeHealingPotion()
+
+    public void PickItem(ItemType itemType)
     {
-        healthBar.HealingPotion();
+        switch (itemType)
+        {
+            case ItemType.COIN:
+                score.AddScore(coinScore);
+                break;
+            case ItemType.BOX:
+                score.AddScore(Random.Range(0, boxScore + 1));
+                break;
+            default: break;
+        }
     }
 
-    public void TakeTimePotion()
+    public void TakePotion(PotionType potionType)
     {
-        timer.TimePotion();
+        switch (potionType)
+        {
+            case PotionType.RED:
+                timer.AddTime(timePotion);
+                break;
+            case PotionType.GREEN:
+                healthBar.AddHealth(Random.Range(0f, maxHeal));
+                break;
+            case PotionType.BLUE: break;
+            default: break;
+        }
     }
 
-    public void TakeTeleportationPotion()
+    public void TakeDamage()
     {
-        currentTeleportation += 5;
-        Debug.Log(currentTeleportation);
-    }
-
-    public void PickCoin()
-    {
-        score.Coin();
-    }
-
-    public void PickBox()
-    {
-        score.Box();
-    }
-
-    public void TakePunchDamage()
-    {
-        healthBar.PunchDamage();
+        float damage = Random.Range(0f, maxDamage);
+        healthBar.AddHealth(-damage);
     }
 }

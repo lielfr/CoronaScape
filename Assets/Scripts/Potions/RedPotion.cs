@@ -1,17 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameEnums;
 
-public class RedPotion : MonoBehaviour
+public class RedPotion : Potion
 {
-    public GameObject redPotionPrefab;
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Time Potion Picked");
-            other.GetComponent<PlayerStatsController>().TakeTimePotion();
-            Destroy(redPotionPrefab);
-        }
-    }
+    public override PotionType Type => PotionType.RED;
 }

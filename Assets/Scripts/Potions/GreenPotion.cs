@@ -1,17 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameEnums;
 
-public class GreenPotion : MonoBehaviour
+public class GreenPotion : Potion
 {
-    public GameObject greenPotionPrefab;
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Heal Potion Picked");
-            other.GetComponent<PlayerStatsController>().TakeHealingPotion();
-            Destroy(greenPotionPrefab);
-        }
-    }
+    public override PotionType Type => PotionType.GREEN;
 }
