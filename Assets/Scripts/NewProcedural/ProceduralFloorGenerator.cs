@@ -50,18 +50,18 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Vector3[] vertices = new Vector3[]
         {
-            rotationMatrix * baseTopLeftCorner,
-            rotationMatrix * baseTopRightCorner,
-            rotationMatrix * ceilTopLeftCorner,
-            rotationMatrix * ceilTopRightCorner,
-            rotationMatrix * baseBottomLeftCorner,
-            rotationMatrix * baseBottomRightCorner,
-            rotationMatrix * ceilBottomLeftCorner,
-            rotationMatrix * ceilBottomRightCorner,
-            rotationMatrix * baseBottomDoorLeft,
-            rotationMatrix * ceilBottomDoorLeft,
-            rotationMatrix * baseBottomDoorRight,
-            rotationMatrix * ceilBottomDoorRight,
+            rotationMatrix.MultiplyPoint3x4(baseTopLeftCorner),
+            rotationMatrix.MultiplyPoint3x4(baseTopRightCorner),
+            rotationMatrix.MultiplyPoint3x4(ceilTopLeftCorner),
+            rotationMatrix.MultiplyPoint3x4(ceilTopRightCorner),
+            rotationMatrix.MultiplyPoint3x4(baseBottomLeftCorner),
+            rotationMatrix.MultiplyPoint3x4(baseBottomRightCorner),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomLeftCorner),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomRightCorner),
+            rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
+            rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight),
         };
 
         int[] triangles;
@@ -97,17 +97,16 @@ public class ProceduralFloorGenerator : MonoBehaviour
         object[] retArr = new object[]
         {
             ret,
-            baseBottomDoorLeft,
-            baseBottomDoorRight,
-            ceilBottomDoorLeft,
-            ceilBottomDoorRight
+            rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
+            rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight)
         };
         return retArr;
     }
 
     Mesh NewRoom(Vector3 baseTopLeftCorner, float rotationAngle = 0f)
     {
-        Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f));
         List<CombineInstance> combineInstances = new List<CombineInstance>();
 
         object[] innerData = NewRoomShape(baseTopLeftCorner, roomWidth, roomBreadth, rotationAngle);
@@ -182,6 +181,8 @@ public class ProceduralFloorGenerator : MonoBehaviour
     {
         Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f));
         Mesh ret = new Mesh();
+        Mesh rectMesh = new Mesh();
+        List<CombineInstance> combineInstances = new List<CombineInstance>();
         Vector3 topRightCorner = topLeftCorner + new Vector3(
             width,
             0f,
@@ -215,9 +216,27 @@ public class ProceduralFloorGenerator : MonoBehaviour
         };
 
         // TODO: Add rooms here
+        Mesh testRoom = NewRoom(topLeftCorner, rotationAngle);
+        CombineInstance testRoomCombineInstance = new CombineInstance
+        {
+            mesh = testRoom,
+            subMeshIndex = 0,
+            transform = Matrix4x4.identity
+        };
+        combineInstances.Add(testRoomCombineInstance);
 
-        ret.vertices = vertices;
-        ret.triangles = triangles;
+        rectMesh.vertices = vertices;
+        rectMesh.triangles = triangles;
+
+        CombineInstance rectCombiner = new CombineInstance
+        {
+            mesh = rectMesh,
+            subMeshIndex = 0,
+            transform = Matrix4x4.identity
+        };
+        combineInstances.Add(rectCombiner);
+
+        ret.CombineMeshes(combineInstances.ToArray(), true);
         ret.RecalculateNormals();
 
         return ret;
@@ -299,8 +318,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
         MeshFilter filter = GetComponent<MeshFilter>();
         List<CombineInstance> combineInstances = new List<CombineInstance>();
 
-        //float baseRotation = Random.Range(0f, 360f);
-        float baseRotation = 0f;
+        float baseRotation = Random.Range(0f, 360f);
         // Start with base rect
         Mesh baseMesh = NewRectCenter(new Vector3(0, 0, 0), width, height, baseRotation);
         CombineInstance baseCombineInstance = new CombineInstance
@@ -310,15 +328,6 @@ public class ProceduralFloorGenerator : MonoBehaviour
             transform = Matrix4x4.identity
         };
         combineInstances.Add(baseCombineInstance);
-
-        Mesh testRoom = NewRoom(baseMesh.vertices[0], baseRotation);
-        CombineInstance testRoomCombineInstance = new CombineInstance
-        {
-            mesh = testRoom,
-            subMeshIndex = 0,
-            transform = Matrix4x4.identity
-        };
-        combineInstances.Add(testRoomCombineInstance);
 
         //for (int i = 0; i < numRects - 1; i++)
         //{
@@ -334,6 +343,10 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Mesh combinedMesh = new Mesh();
         combinedMesh.CombineMeshes(combineInstances.ToArray(), true);
+        combinedMesh.RecalculateNormals();
+        combinedMesh.RecalculateNormals();
+        combinedMesh.RecalculateTangents();
+        combinedMesh.Optimize();
         filter.mesh = combinedMesh;
     }
 
