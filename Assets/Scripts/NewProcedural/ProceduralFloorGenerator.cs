@@ -216,14 +216,30 @@ public class ProceduralFloorGenerator : MonoBehaviour
         };
 
         // TODO: Add rooms here
-        Mesh testRoom = NewRoom(topLeftCorner, rotationAngle);
-        CombineInstance testRoomCombineInstance = new CombineInstance
+
+        Vector3 topWidth = topRightCorner - topLeftCorner;
+        int numRoomsW = Mathf.FloorToInt(topWidth.magnitude / roomWidth);
+
+        for (int i = 0; i < numRoomsW; i++)
         {
-            mesh = testRoom,
-            subMeshIndex = 0,
-            transform = Matrix4x4.identity
-        };
-        combineInstances.Add(testRoomCombineInstance);
+            Mesh room = NewRoom(topLeftCorner + new Vector3(i * roomWidth, 0f, 0f), rotationAngle);
+            CombineInstance roomCombiner = new CombineInstance()
+            {
+                mesh = room,
+                subMeshIndex = 0,
+                transform = Matrix4x4.identity
+            };
+            combineInstances.Add(roomCombiner);
+        }
+
+        //Mesh testRoom = NewRoom(topLeftCorner, rotationAngle);
+        //CombineInstance testRoomCombineInstance = new CombineInstance
+        //{
+        //    mesh = testRoom,
+        //    subMeshIndex = 0,
+        //    transform = Matrix4x4.identity
+        //};
+        //combineInstances.Add(testRoomCombineInstance);
 
         rectMesh.vertices = vertices;
         rectMesh.triangles = triangles;
