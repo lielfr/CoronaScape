@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class ProceduralFloorGenerator : MonoBehaviour
 {
@@ -222,14 +223,26 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         for (int i = 0; i < numRoomsW; i++)
         {
-            Mesh room = NewRoom(topLeftCorner + new Vector3(i * roomWidth, 0f, 0f), rotationAngle);
-            CombineInstance roomCombiner = new CombineInstance()
+            Mesh roomTop = NewRoom(topLeftCorner + new Vector3(i * roomWidth, 0f, 0f), rotationAngle);
+            Mesh roomBottom = NewRoom(topRightCorner - new Vector3((i+1) * roomWidth, 0f, 0f), rotationAngle + 180f);
+            Vector3 centerOffset = new Vector3((float)((i + 0.5f) * roomWidth), 0f, 0f);
+            centerOffset = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f)).MultiplyPoint3x4(centerOffset);
+            centerOffset = -centerOffset;
+            Matrix4x4 rotateCenter = Matrix4x4.Translate(centerOffset) * Matrix4x4.Rotate(Quaternion.Euler(0f, 180f, 0f)) * Matrix4x4.Translate(-centerOffset);
+            CombineInstance topRoomCombiner = new CombineInstance()
             {
-                mesh = room,
+                mesh = roomTop,
                 subMeshIndex = 0,
                 transform = Matrix4x4.identity
             };
-            combineInstances.Add(roomCombiner);
+            combineInstances.Add(topRoomCombiner);
+            CombineInstance bottomRoomCombiner = new CombineInstance()
+            {
+                mesh = roomBottom,
+                subMeshIndex = 0,
+                transform = Matrix4x4.identity
+            };
+            combineInstances.Add(bottomRoomCombiner);
         }
 
         //Mesh testRoom = NewRoom(topLeftCorner, rotationAngle);
