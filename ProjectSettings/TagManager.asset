@@ -13,6 +13,8 @@ TagManager:
   - Box
   - PatientEnemy
   - Enemy
+  - StatsCanvas
+  - GameOverCanvas
   layers:
   - Default
   - TransparentFX

@@ -47,7 +47,7 @@ public class ProceduralGenerator : MonoBehaviour
         halls = new List<Hall>();
         matrixLock = new object();
         layoutMatrix = new LayoutCell[LAYOUT_DIM, LAYOUT_DIM];
-        gameManager = GameManager.GetInstance();
+        gameManager = GameManager.Instance;
         ResetLayoutMatrix();
         GenerateLayout();
     }
@@ -158,7 +158,7 @@ public class ProceduralGenerator : MonoBehaviour
     void PlacePlayer()
     {
         var offset = new Vector2(transform.position.x, transform.position.z);
-        if (gameManager.GetLevel() == 1)
+        if (gameManager.Level == 1)
         {
             var roomIndex = Random.Range(0, rooms.Count);
             var selectedRoom = rooms[roomIndex];

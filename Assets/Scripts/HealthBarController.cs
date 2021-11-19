@@ -17,46 +17,55 @@ public class HealthBarController : MonoBehaviour
     private float maxHealth;
     #endregion
 
-    public void Init(float value)
+    public void ResetHealth(float value)
     {
         maxHealth = value;
         currentHealth = value;
         isEmpty = currentHealth <= 0;
-        SetFill();
+        Fill();
     }
 
     public void AddHealth(float value)
     {
         currentHealth += value;
-        SetFill();
+        Fill();
     }
 
-    private void SetFill()
+    public void HideBar()
     {
-        if (isEmpty) // Think about a better way...
-            return;
+        slider.gameObject.SetActive(false);
+        fill.gameObject.SetActive(false);
+    }
 
-        if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
+    public void DisplayBar()
+    {
+        slider.gameObject.SetActive(true);
+        fill.gameObject.SetActive(true);
+    }
 
-        slider.value = currentHealth;
-        if (slider.value > 0)
+    private void Fill()
+    {
+        if (!isEmpty)
         {
-            if (currentHealth <= maxHealth && currentHealth > maxHealth / 2)
-                fill.color = Color.green;
-            else
+            currentHealth = currentHealth > maxHealth ? maxHealth : currentHealth;
+            if (currentHealth > 0)
             {
-                if (currentHealth <= maxHealth / 2 && currentHealth > maxHealth / 4)
+                slider.value = currentHealth;
+                if (maxHealth / 2 < currentHealth && currentHealth <= maxHealth)
+                    fill.color = Color.green;
+                if (maxHealth / 4 < currentHealth && currentHealth <= maxHealth / 2)
                     fill.color = Color.yellow;
-                else
+                if (currentHealth <= maxHealth / 4)
                     fill.color = Color.red;
             }
-        }
-        else
-        {
-            slider.value = maxHealth;
-            fill.color = Color.black;
-            isEmpty = true;
+
+            else
+            {
+                slider.value = maxHealth;
+                fill.color = Color.black;
+                isEmpty = true;
+                GameManager.Instance.IsGameOver = true;
+            }
         }
     }
 }

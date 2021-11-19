@@ -13,4 +13,14 @@
         BOX,
         POSTION
     }
+
+    public enum Difficulty
+    {
+        NONE,
+        EASY,
+        MEDIUM,
+        HARD,
+        EXTREME
+    }
+
 }

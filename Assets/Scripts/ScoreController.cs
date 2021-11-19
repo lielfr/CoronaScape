@@ -11,7 +11,7 @@ public class ScoreController : MonoBehaviour
     private int currentScore;
     #endregion
 
-    public void Init()
+    public void ResetScore()
     {
         currentScore = 0;
         scoreText.text = "Score: 0";

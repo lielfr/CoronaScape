@@ -10,29 +10,42 @@ public class TimerController : MonoBehaviour
     private Text timerText;
 
     [SerializeField]
-    private bool isRunning = false;
+    private bool isEnabled = false;
 
     [SerializeField]
     private float remaining;
     #endregion
 
+    public bool IsEnabled { get => isEnabled; }
+
     void Update()
     {
-        if(isRunning)
+        if (isEnabled)
         {
             remaining -= Time.deltaTime;
+            if (remaining <= 0)
+            {
+                remaining = 0;
+                isEnabled = false;
+                GameManager.Instance.IsGameOver = true;
+            }
+            SetText(remaining);
         }
-        if (remaining <= 0) {
-            remaining = 0;
-            isRunning = false;
-        }
-        SetText(remaining);
     }
 
-    public void Init(float value) 
+    public void ResetTimer(float value)
     {
         remaining = ++value;
-        isRunning = true;
+    }
+
+    public void StartTimer()
+    {
+        isEnabled = true;
+    }
+
+    public void StopTimer()
+    {
+        isEnabled = false;
     }
 
     public void AddTime(float value)
@@ -40,7 +53,7 @@ public class TimerController : MonoBehaviour
         remaining += value;
     }
 
-    void SetText(float value)
+    private void SetText(float value)
     {
         float mins = Mathf.FloorToInt(value / 60);
         float secs = Mathf.FloorToInt(value % 60);

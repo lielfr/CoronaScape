@@ -1,35 +1,24 @@
+using GameEnums;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameManager
 {
-    private static GameManager instance = null;
-    private int levelNum;
+    #region Thread Safe Singleton
+    private static readonly System.Lazy<GameManager> instance = new System.Lazy<GameManager>(() => new GameManager());
+    public static GameManager Instance => instance.Value;
+    private GameManager() { }
+    #endregion
 
-    private GameManager()
-    {
-        levelNum = 1;
-    }
+    public bool IsGameOver { get; set; } = false;
 
-    public static GameManager GetInstance()
-    {
-        if (instance == null)
-            instance = new GameManager();
-        return instance;
-    }
+    #region Level
+    public int Level { get; private set; } = 1;
+    public void NextLevel() => Level++;
+    public void RestartGame() => Level = 1;
+    #endregion
 
-    public void NextLevel()
-    {
-        levelNum++;
-    }
-
-    public void RestartGame()
-    {
-        levelNum = 1;
-    }
-
-    public int GetLevel()
-    {
-        return levelNum;
-    }
+    #region Difficulty
+    public Difficulty Difficulty { get; private set; } = Difficulty.EASY;
+    #endregion
 }
