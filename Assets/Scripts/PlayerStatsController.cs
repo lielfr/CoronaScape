@@ -3,55 +3,111 @@ using UnityEngine;
 
 public class PlayerStatsController : MonoBehaviour
 {
-    #region Score
-    private ScoreController score;
+    #region Controllers
+    private ScoreController scoreController;
+    private HealthBarController healthController;
+    private TimerController timerController;
+    #endregion
 
+    #region Fields
     [SerializeField]
     private int coinScore = 5;
     [SerializeField]
     private int boxScore = 25;
-    #endregion
-
-    #region Health
-    private HealthBarController healthBar;
-
     [SerializeField]
     private float health = 100f;
     [SerializeField]
     private float maxHeal = 15f;
     [SerializeField]
     private float maxDamage = 10f;
-    #endregion
-
-    #region Time
-    private TimerController timer;
-
     [SerializeField]
     private float levelTime = 60 * 5 + 30;
     [SerializeField]
     private float timePotion = 30;
     #endregion
 
+    #region Difficulty
+    private Difficulty difficuly = Difficulty.NONE;
+    public Difficulty Difficulty
+    {
+        get => difficuly;
+        set
+        {
+            if (difficuly != value)
+            {
+                switch (value)
+                {
+                    case Difficulty.EASY:
+                        coinScore = 15;
+                        boxScore = 25;
+                        health = 100f;
+                        maxHeal = 15f;
+                        maxDamage = 10f;
+                        levelTime = 1200f;
+                        timePotion = 120f;
+                        break;
+                    case Difficulty.MEDIUM:
+                        coinScore = 10;
+                        boxScore = 15;
+                        health = 100f;
+                        maxHeal = 10f;
+                        maxDamage = 10f;
+                        levelTime = 900f;
+                        timePotion = 60f;
+                        break;
+                    case Difficulty.HARD:
+                        coinScore = 5;
+                        boxScore = 15;
+                        health = 100f;
+                        maxHeal = 10f;
+                        maxDamage = 15f;
+                        levelTime = 600f;
+                        timePotion = 30f;
+                        break;
+                    case Difficulty.EXTREME:
+                        coinScore = 5;
+                        boxScore = 10;
+                        health = 100f;
+                        maxHeal = 5f;
+                        maxDamage = 15f;
+                        levelTime = 300f;
+                        timePotion = 10f;
+                        break;
+                    default:
+                        break;
+                }
+
+                difficuly = value;
+                ResetStats();
+            }
+        }
+    }
+    #endregion
+
     private void Start()
     {
-        score = GetComponent<ScoreController>();
-        score.Init();
-        healthBar = GetComponent<HealthBarController>();
-        healthBar.Init(health);
-        timer = GetComponent<TimerController>();
-        timer.Init(levelTime);
+        scoreController = GetComponent<ScoreController>();
+        healthController = GetComponent<HealthBarController>();
+        timerController = GetComponent<TimerController>();
+        Difficulty = GameManager.Instance.Difficulty;
     }
 
+    public void ResetStats()
+    {
+        scoreController.ResetScore();
+        healthController.ResetHealth(health);
+        timerController.ResetTimer(levelTime);
+    }
 
     public void PickItem(ItemType itemType)
     {
         switch (itemType)
         {
             case ItemType.COIN:
-                score.AddScore(coinScore);
+                scoreController.AddScore(coinScore);
                 break;
             case ItemType.BOX:
-                score.AddScore(Random.Range(0, boxScore + 1));
+                scoreController.AddScore(Random.Range(0, boxScore + 1));
                 break;
             default: break;
         }
@@ -62,10 +118,10 @@ public class PlayerStatsController : MonoBehaviour
         switch (potionType)
         {
             case PotionType.RED:
-                timer.AddTime(timePotion);
+                timerController.AddTime(timePotion);
                 break;
             case PotionType.GREEN:
-                healthBar.AddHealth(Random.Range(0f, maxHeal));
+                healthController.AddHealth(Random.Range(0f, maxHeal));
                 break;
             case PotionType.BLUE: break;
             default: break;
@@ -75,6 +131,11 @@ public class PlayerStatsController : MonoBehaviour
     public void TakeDamage()
     {
         float damage = Random.Range(0f, maxDamage);
-        healthBar.AddHealth(-damage);
+        healthController.AddHealth(-damage);
+    }
+
+    public void EndGame()
+    {
+
     }
 }

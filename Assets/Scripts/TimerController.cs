@@ -29,7 +29,7 @@ public class TimerController : MonoBehaviour
         SetText(remaining);
     }
 
-    public void Init(float value) 
+    public void ResetTimer(float value) 
     {
         remaining = ++value;
         isRunning = true;
