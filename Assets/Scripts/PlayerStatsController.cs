@@ -1,4 +1,5 @@
 using GameEnums;
+using TMPro;
 using UnityEngine;
 
 public class PlayerStatsController : MonoBehaviour
@@ -43,7 +44,7 @@ public class PlayerStatsController : MonoBehaviour
                         health = 100f;
                         maxHeal = 15f;
                         maxDamage = 10f;
-                        levelTime = 1200f;
+                        levelTime = 3f;
                         timePotion = 120f;
                         break;
                     case Difficulty.MEDIUM:
@@ -84,12 +85,25 @@ public class PlayerStatsController : MonoBehaviour
     }
     #endregion
 
+    #region Game Over
+    public TextMeshProUGUI gameOver;
+    #endregion
+
     private void Start()
     {
+        gameOver.gameObject.SetActive(false);
         scoreController = GetComponent<ScoreController>();
         healthController = GetComponent<HealthBarController>();
         timerController = GetComponent<TimerController>();
         Difficulty = GameManager.Instance.Difficulty;
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.IsGameOver)
+        {
+            EndGame();
+        }
     }
 
     public void ResetStats()
@@ -97,6 +111,7 @@ public class PlayerStatsController : MonoBehaviour
         scoreController.ResetScore();
         healthController.ResetHealth(health);
         timerController.ResetTimer(levelTime);
+        timerController.StartTimer();
     }
 
     public void PickItem(ItemType itemType)
@@ -136,6 +151,12 @@ public class PlayerStatsController : MonoBehaviour
 
     public void EndGame()
     {
+        timerController.StopTimer();
+        healthController.HideBar();
 
+        timerController.gameObject.SetActive(false);
+        healthController.gameObject.SetActive(false);
+        scoreController.gameObject.SetActive(false);
+        gameOver.gameObject.SetActive(true);
     }
 }

@@ -31,6 +31,18 @@ public class HealthBarController : MonoBehaviour
         Fill();
     }
 
+    public void HideBar()
+    {
+        slider.gameObject.SetActive(false);
+        fill.gameObject.SetActive(false);
+    }
+
+    public void DisplayBar()
+    {
+        slider.gameObject.SetActive(true);
+        fill.gameObject.SetActive(true);
+    }
+
     private void Fill()
     {
         if (!isEmpty)
@@ -52,6 +64,7 @@ public class HealthBarController : MonoBehaviour
                 slider.value = maxHealth;
                 fill.color = Color.black;
                 isEmpty = true;
+                GameManager.Instance.IsGameOver = true;
             }
         }
     }

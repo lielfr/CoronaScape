@@ -10,6 +10,8 @@ public class GameManager
     private GameManager() { }
     #endregion
 
+    public bool IsGameOver { get; set; } = false;
+
     #region Level
     public int Level { get; private set; } = 1;
     public void NextLevel() => Level++;
