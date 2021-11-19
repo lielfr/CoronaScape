@@ -15,6 +15,7 @@ TagManager:
   - Enemy
   - StatsCanvas
   - GameOverCanvas
+  - Laser
   layers:
   - Default
   - TransparentFX

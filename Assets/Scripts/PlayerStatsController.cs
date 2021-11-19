@@ -44,7 +44,7 @@ public class PlayerStatsController : MonoBehaviour
                         health = 100f;
                         maxHeal = 15f;
                         maxDamage = 10f;
-                        levelTime = 3f;
+                        levelTime = 1200f;
                         timePotion = 120f;
                         break;
                     case Difficulty.MEDIUM:
@@ -101,9 +101,7 @@ public class PlayerStatsController : MonoBehaviour
     private void Update()
     {
         if (GameManager.Instance.IsGameOver)
-        {
             EndGame();
-        }
     }
 
     public void ResetStats()
