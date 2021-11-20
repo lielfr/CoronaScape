@@ -54,18 +54,18 @@ public class Room
             {
                 case potionTypes.BLUE:
                     {
-                        generatedPotion = GameObject.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
                 case potionTypes.RED:
                     {
-                        generatedPotion = GameObject.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
                 default:
                     {
                         // Used default here just to suppress the annoying uninitialized local variable error.
-                        generatedPotion = GameObject.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
             }
