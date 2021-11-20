@@ -26,6 +26,11 @@ public class ProceduralFloorGenerator : MonoBehaviour
     public GameObject coinPrefab;
     public GameObject boxPrefab;
 
+    private bool IsRoomAreaAvailable()
+    {
+        return false;
+    }
+
     object[] NewRoomShape(Vector3 baseTopLeftCorner, float roomWidth, float roomBreadth, float rotationAngle = 0f, bool flipTriangles = false)
     {
         Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f));
@@ -186,16 +191,16 @@ public class ProceduralFloorGenerator : MonoBehaviour
         ret.CombineMeshes(combineInstances.ToArray(), true);
         ret.RecalculateNormals();
 
-        Room newRoom = new Room(
-            new Vector2(((Vector3)innerData[5]).x, ((Vector3)innerData[5]).z),
-            new Vector2(((Vector3)innerData[8]).x, ((Vector3)innerData[8]).z),
-            this,
-            redPotionPrefab,
-            bluePotionPrefab,
-            greenPotionPrefab,
-            coinPrefab,
-            boxPrefab
-        );
+        //Room newRoom = new Room(
+        //    new Vector2(((Vector3)innerData[5]).x, ((Vector3)innerData[5]).z),
+        //    new Vector2(((Vector3)innerData[8]).x, ((Vector3)innerData[8]).z),
+        //    this,
+        //    redPotionPrefab,
+        //    bluePotionPrefab,
+        //    greenPotionPrefab,
+        //    coinPrefab,
+        //    boxPrefab
+        //);
 
 
         return ret;
