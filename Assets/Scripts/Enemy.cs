@@ -29,9 +29,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Laser"))
+
+        if (other.CompareTag("Player"))
+            other.GetComponent<PlayerStatsController>().TakeDamage();
+
+        if (other.CompareTag("Laser"))
             TakeDamage();
     }
 

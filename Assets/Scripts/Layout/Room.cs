@@ -23,9 +23,9 @@ public class Room
 
     private const int GAP = 5;
 
-    private ProceduralFloorGenerator generator;
+    private ProceduralGenerator generator;
 
-    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, ProceduralFloorGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
+    public  Room(Vector2Int topLeftCorner, Vector2Int bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
         xPosMin = topLeftCorner.x + GAP;
         zPosMin = topLeftCorner.y + GAP;
@@ -54,18 +54,18 @@ public class Room
             {
                 case potionTypes.BLUE:
                     {
-                        generatedPotion = Object.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = GameObject.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
                 case potionTypes.RED:
                     {
-                        generatedPotion = Object.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = GameObject.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
                 default:
                     {
                         // Used default here just to suppress the annoying uninitialized local variable error.
-                        generatedPotion = Object.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = GameObject.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
                         break;
                     }
             }

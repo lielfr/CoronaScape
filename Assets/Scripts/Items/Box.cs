@@ -1,6 +1,6 @@
 using GameEnums;
 
-public class Box : CollectableItem
+public class Box : Item
 {
-    public override CollectableItems Type => CollectableItems.Box;
+    public override ItemType Type => ItemType.BOX;
 }

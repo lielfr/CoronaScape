@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 currentMovement;
 
-    private bool handlingCollision = false;
-
     void Start()
     {
         controller.detectCollisions = true;
@@ -39,18 +37,5 @@ public class PlayerMovement : MonoBehaviour
         {
             currentMovement = new Vector2(0f, 0f);
         }
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (handlingCollision)
-            return;
-
-        handlingCollision = true;
-
-        if (hit.controller.gameObject.CompareTag("Player"))
-            gameObject.SendMessageUpwards("TakeDamage");
-
-        handlingCollision = false;
     }
 }
