@@ -29,9 +29,4 @@ public class ScoreController : MonoBehaviour
         currentScore += value;
         scoreText.text = $"Score: {currentScore}";
     }
-
-    public void GameOver()
-    {
-        gameObject.SetActive(false);
-    }
 }
