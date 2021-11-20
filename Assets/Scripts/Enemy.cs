@@ -31,7 +31,10 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Laser"))
+        if (other.CompareTag("Player"))
+            gameObject.SendMessageUpwards("TakeDamage");
+
+        if (other.CompareTag("Laser"))
             TakeDamage();
     }
 
