@@ -8,14 +8,12 @@ TagManager:
   - RedPotion
   - BluePotion
   - HealthBarFill
-  - GameOver
   - Coin
   - Box
-  - PatientEnemy
   - Enemy
-  - StatsCanvas
-  - GameOverCanvas
   - Laser
+  - Score
+  - HealthBar
   layers:
   - Default
   - TransparentFX

@@ -1,21 +1,28 @@
+using GameEnums;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBarController : MonoBehaviour
 {
-    #region Private Fields
-    private float currentHealth;
-    private bool isEmpty;
-
-    [SerializeField]
+    #region Fields
     private Slider slider;
-
-    [SerializeField]
     private Image fill;
-
-    [SerializeField]
     private float maxHealth;
+    private bool isEmpty;
+    private float currentHealth;
     #endregion
+
+    private void Awake()
+    {
+        maxHealth = GameplayManager.Health;
+    }
+
+    private void Start()
+    {
+        slider = GetComponent<UnityEngine.UI.Slider>();
+        fill = GameObject.Find("HealthBarFill").GetComponent<Image>();
+        ResetHealth(maxHealth);
+    }
 
     public void ResetHealth(float value)
     {
@@ -64,8 +71,14 @@ public class HealthBarController : MonoBehaviour
                 slider.value = maxHealth;
                 fill.color = Color.black;
                 isEmpty = true;
-                GameManager.Instance.IsGameOver = true;
+                gameObject.SendMessageUpwards(Messages.GameOver.ToString());
             }
         }
+    }
+
+    public void GameOver()
+    {
+        HideBar();
+        gameObject.SetActive(false);
     }
 }

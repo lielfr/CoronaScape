@@ -151,7 +151,7 @@ public class ProceduralGenerator : MonoBehaviour
         var offset = new Vector2Int(Convert.ToInt32(transform.position.x), Convert.ToInt32(transform.position.z));
         foreach (var chunk in Chunk.finalChunks)
         {
-            rooms.Add(new Room(offset + chunk.GetUpperLeftCorner(), offset + chunk.GetLowerRightCorner(), this, redPotionPrefab, bluePotionPrefab, greenPotionPrefab, coinPrefab, boxPrefab));
+            //rooms.Add(new Room(offset + chunk.GetUpperLeftCorner(), offset + chunk.GetLowerRightCorner(), this, redPotionPrefab, bluePotionPrefab, greenPotionPrefab, coinPrefab, boxPrefab));
         }
     }
 

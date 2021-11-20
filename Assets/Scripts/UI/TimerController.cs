@@ -1,3 +1,4 @@
+using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,29 +6,38 @@ using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour
 {
-    #region Private Fields
-    [SerializeField]
+    #region Fields
     private Text timerText;
-
-    [SerializeField]
-    private bool isEnabled = false;
-
-    [SerializeField]
     private float remaining;
+    private bool isEnabled;
     #endregion
 
+    #region Properties
     public bool IsEnabled { get => isEnabled; }
+    #endregion
+
+    private void Awake()
+    {
+        remaining = GameplayManager.LevelTime;
+        isEnabled = false;
+    }
+
+    private void Start()
+    {
+        timerText = GetComponent<Text>();
+        SetText(remaining);
+    }
 
     void Update()
     {
         if (isEnabled)
         {
             remaining -= Time.deltaTime;
-            if (remaining <= 0)
+            if (remaining <= 0f)
             {
-                remaining = 0;
+                remaining = 0f;
                 isEnabled = false;
-                GameManager.Instance.IsGameOver = true;
+                gameObject.SendMessageUpwards(Messages.GameOver.ToString());
             }
             SetText(remaining);
         }
@@ -35,7 +45,7 @@ public class TimerController : MonoBehaviour
 
     public void ResetTimer(float value)
     {
-        remaining = ++value;
+        remaining = value;
     }
 
     public void StartTimer()
@@ -58,5 +68,11 @@ public class TimerController : MonoBehaviour
         float mins = Mathf.FloorToInt(value / 60);
         float secs = Mathf.FloorToInt(value % 60);
         timerText.text = $"{mins:00}" + ":" + $"{secs:00}";
+    }
+
+    public void GameOver()
+    {
+        isEnabled = false;
+        gameObject.SetActive(false);
     }
 }
