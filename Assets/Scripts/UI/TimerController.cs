@@ -26,6 +26,7 @@ public class TimerController : MonoBehaviour
     {
         timerText = GetComponent<Text>();
         SetText(remaining);
+        isEnabled = true;
     }
 
     void Update()
@@ -36,8 +37,8 @@ public class TimerController : MonoBehaviour
             if (remaining <= 0f)
             {
                 remaining = 0f;
+                FindObjectOfType<GameplayManager>().GameOver();
                 isEnabled = false;
-                gameObject.SendMessageUpwards(Messages.GameOver.ToString());
             }
             SetText(remaining);
         }
@@ -68,11 +69,5 @@ public class TimerController : MonoBehaviour
         float mins = Mathf.FloorToInt(value / 60);
         float secs = Mathf.FloorToInt(value % 60);
         timerText.text = $"{mins:00}" + ":" + $"{secs:00}";
-    }
-
-    public void GameOver()
-    {
-        isEnabled = false;
-        gameObject.SetActive(false);
     }
 }

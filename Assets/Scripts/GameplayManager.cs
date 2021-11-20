@@ -1,12 +1,21 @@
 using GameEnums;
+using TMPro;
 using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
-    private Canvas canvas;
+    #region Required References
+    public TextMeshProUGUI gameOverText;
+    private PlayerMovement movementController;
+    private TimerController timerController;
+    private HealthBarController healthBarController;
+    private ScoreController scoreController;
+    #endregion
+
 
     #region Fields
     private bool isGameOver = false;
+    private bool handlingMessage = false;
     private static int coinScore;
     private static int boxScore;
     private static float health;
@@ -73,20 +82,26 @@ public class GameplayManager : MonoBehaviour
     }
     #endregion
 
+    #region Properties
     public static float LevelTime { get => levelTime; }
     public static float Health { get => health; }
-    public bool IsGameOver { get => IsGameOver; }
+    #endregion
 
-
-
-    void Start()
+    private void Awake()
     {
-
-    }
-
-    void Update()
-    {
-
+        if (SceneChanger.Difficulty == 0)
+            Difficulty = Difficulty.EASY;
+        if (SceneChanger.Difficulty == 1)
+            Difficulty = Difficulty.MEDIUM;
+        if (SceneChanger.Difficulty == 2)
+            Difficulty = Difficulty.HARD;
+        if (SceneChanger.Difficulty == 3)
+            Difficulty = Difficulty.EXTREME;
+        movementController = FindObjectOfType<PlayerMovement>();
+        timerController = FindObjectOfType<TimerController>();
+        healthBarController = FindObjectOfType<HealthBarController>();
+        scoreController = FindObjectOfType<ScoreController>();
+        gameOverText.enabled = false;
     }
 
     public void Collect(CollectableItems type)
@@ -114,9 +129,28 @@ public class GameplayManager : MonoBehaviour
 
     public void GameOver()
     {
-        gameObject.BroadcastMessage(Messages.GameOver.ToString());
-        isGameOver = true;
+        if (!isGameOver)
+        {
+            gameOverText.enabled = true;
+            movementController.enabled = false;
+            timerController.enabled = false;
+            scoreController.enabled = false;
+            healthBarController.HideBar();
+            healthBarController.enabled = false;
+            isGameOver = true;
+        }
     }
 
-    
+    public void TakeDamage()
+    {
+        if (!handlingMessage)
+        {
+            handlingMessage = true;
+            gameObject.BroadcastMessage("PlayerDamaged", /*-Random.Range(0f, maxDamage)*/ 100);
+            handlingMessage = false;
+        }
+    }
+
+
+
 }

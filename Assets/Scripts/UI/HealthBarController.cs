@@ -1,4 +1,5 @@
 using GameEnums;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class HealthBarController : MonoBehaviour
     private float currentHealth;
     #endregion
 
+    private bool handlingMessage = false;
     private void Awake()
     {
         maxHealth = GameplayManager.Health;
@@ -30,6 +32,19 @@ public class HealthBarController : MonoBehaviour
         currentHealth = value;
         isEmpty = currentHealth <= 0;
         Fill();
+    }
+
+
+    public IEnumerator PlayerDamaged(float value)
+    {
+        if (!handlingMessage)
+        {
+            handlingMessage = true;
+            currentHealth -= value;
+            Fill();
+            yield return new WaitForSeconds(2);
+            handlingMessage = false;
+        }
     }
 
     public void AddHealth(float value)
@@ -71,14 +86,8 @@ public class HealthBarController : MonoBehaviour
                 slider.value = maxHealth;
                 fill.color = Color.black;
                 isEmpty = true;
-                gameObject.SendMessageUpwards(Messages.GameOver.ToString());
+                FindObjectOfType<GameplayManager>().GameOver();
             }
         }
-    }
-
-    public void GameOver()
-    {
-        HideBar();
-        gameObject.SetActive(false);
     }
 }
