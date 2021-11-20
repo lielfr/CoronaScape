@@ -23,9 +23,9 @@ public class Room
 
     private const int GAP = 5;
 
-    private ProceduralGenerator generator;
+    private ProceduralFloorGenerator generator;
 
-    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
+    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, ProceduralFloorGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
         xPosMin = topLeftCorner.x + GAP;
         zPosMin = topLeftCorner.y + GAP;
