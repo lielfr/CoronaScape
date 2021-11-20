@@ -1,17 +1,12 @@
 ﻿namespace GameEnums
 {
-    public enum PotionType
+    public enum CollectableItems
     {
-        RED,
-        GREEN,
-        BLUE
-    }
-
-    public enum ItemType
-    {
-        COIN,
-        BOX,
-        POSTION
+        Coin,
+        Box,
+        RedPotion,
+        GreenPotion,
+        BluePotion
     }
 
     public enum Difficulty
@@ -21,6 +16,11 @@
         MEDIUM,
         HARD,
         EXTREME
+    }
+
+    public enum Messages
+    {
+        GameOver
     }
 
 }

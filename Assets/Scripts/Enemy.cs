@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
     {
 
         if (other.CompareTag("Player"))
-            other.GetComponent<PlayerStatsController>().TakeDamage();
+            gameObject.SendMessageUpwards("TakeDamage");
 
         if (other.CompareTag("Laser"))
             TakeDamage();
