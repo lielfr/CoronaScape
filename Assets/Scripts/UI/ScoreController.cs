@@ -3,13 +3,20 @@ using UnityEngine.UI;
 
 public class ScoreController : MonoBehaviour
 {
-    #region Private Fields
-    [SerializeField]
+    #region Fields
     private Text scoreText;
-
-    [SerializeField]
     private int currentScore;
     #endregion
+
+    private void Awake()
+    {
+        scoreText = GameObject.Find("Score").GetComponent<Text>();
+    }
+
+    private void Start()
+    {
+        ResetScore();
+    }
 
     public void ResetScore()
     {
@@ -21,5 +28,10 @@ public class ScoreController : MonoBehaviour
     {
         currentScore += value;
         scoreText.text = $"Score: {currentScore}";
+    }
+
+    public void GameOver()
+    {
+        gameObject.SetActive(false);
     }
 }

@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using GameEnums;
 
-public abstract class Item : MonoBehaviour
+public abstract class CollectableItem : MonoBehaviour
 {
-    public abstract ItemType Type { get; }
+    public abstract CollectableItems Type { get; }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerStatsController>().PickItem(Type);
+            gameObject.SendMessageUpwards("Collect", Type);
             Destroy(gameObject);
         }
     }
