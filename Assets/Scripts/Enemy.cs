@@ -29,9 +29,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-
         if (other.CompareTag("Player"))
             gameObject.SendMessageUpwards("TakeDamage");
 

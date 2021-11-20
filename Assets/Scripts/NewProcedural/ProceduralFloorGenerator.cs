@@ -20,6 +20,12 @@ public class ProceduralFloorGenerator : MonoBehaviour
     public float doorWidth = 30;
     public float roomWallThickness = 10;
 
+    public GameObject redPotionPrefab;
+    public GameObject bluePotionPrefab;
+    public GameObject greenPotionPrefab;
+    public GameObject coinPrefab;
+    public GameObject boxPrefab;
+
     object[] NewRoomShape(Vector3 baseTopLeftCorner, float roomWidth, float roomBreadth, float rotationAngle = 0f, bool flipTriangles = false)
     {
         Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f));
@@ -51,19 +57,21 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Vector3[] vertices = new Vector3[]
         {
-            rotationMatrix.MultiplyPoint3x4(baseTopLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(baseTopRightCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilTopLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilTopRightCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomRightCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomRightCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight),
+            baseTopLeftCorner,
+            baseTopRightCorner,
+            ceilTopLeftCorner,
+            ceilTopRightCorner,
+            baseBottomLeftCorner,
+            baseBottomRightCorner,
+            ceilBottomLeftCorner,
+            ceilBottomRightCorner,
+            baseBottomDoorLeft,
+            ceilBottomDoorLeft,
+            baseBottomDoorRight,
+            ceilBottomDoorRight,
         };
+
+        vertices = vertices.Select(v => rotationMatrix.MultiplyPoint3x4(v)).ToArray();
 
         int[] triangles;
 
@@ -101,7 +109,11 @@ public class ProceduralFloorGenerator : MonoBehaviour
             rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
             rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
             rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight)
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight),
+            vertices[0],
+            vertices[1],
+            vertices[4],
+            vertices[5]
         };
         return retArr;
     }
@@ -173,6 +185,17 @@ public class ProceduralFloorGenerator : MonoBehaviour
         Mesh ret = new Mesh();
         ret.CombineMeshes(combineInstances.ToArray(), true);
         ret.RecalculateNormals();
+
+        Room newRoom = new Room(
+            new Vector2(((Vector3)innerData[5]).x, ((Vector3)innerData[5]).z),
+            new Vector2(((Vector3)innerData[8]).x, ((Vector3)innerData[8]).z),
+            this,
+            redPotionPrefab,
+            bluePotionPrefab,
+            greenPotionPrefab,
+            coinPrefab,
+            boxPrefab
+        );
 
 
         return ret;
