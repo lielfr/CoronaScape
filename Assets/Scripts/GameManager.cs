@@ -19,6 +19,6 @@ public class GameManager
     #endregion
 
     #region Difficulty
-    public Difficulty Difficulty { get; private set; } = Difficulty.EASY;
+    public Difficulty Difficulty { get; set; } = Difficulty.EASY;
     #endregion
 }
