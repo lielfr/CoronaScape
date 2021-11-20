@@ -51,19 +51,21 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Vector3[] vertices = new Vector3[]
         {
-            rotationMatrix.MultiplyPoint3x4(baseTopLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(baseTopRightCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilTopLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilTopRightCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomRightCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomLeftCorner),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomRightCorner),
-            rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight),
+            baseTopLeftCorner,
+            baseTopRightCorner,
+            ceilTopLeftCorner,
+            ceilTopRightCorner,
+            baseBottomLeftCorner,
+            baseBottomRightCorner,
+            ceilBottomLeftCorner,
+            ceilBottomRightCorner,
+            baseBottomDoorLeft,
+            ceilBottomDoorLeft,
+            baseBottomDoorRight,
+            ceilBottomDoorRight,
         };
+
+        vertices = vertices.Select(v => rotationMatrix.MultiplyPoint3x4(v)).ToArray();
 
         int[] triangles;
 
@@ -101,7 +103,11 @@ public class ProceduralFloorGenerator : MonoBehaviour
             rotationMatrix.MultiplyPoint3x4(baseBottomDoorLeft),
             rotationMatrix.MultiplyPoint3x4(baseBottomDoorRight),
             rotationMatrix.MultiplyPoint3x4(ceilBottomDoorLeft),
-            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight)
+            rotationMatrix.MultiplyPoint3x4(ceilBottomDoorRight),
+            vertices[0],
+            vertices[1],
+            vertices[4],
+            vertices[5]
         };
         return retArr;
     }

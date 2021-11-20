@@ -25,7 +25,7 @@ public class Room
 
     private ProceduralGenerator generator;
 
-    public  Room(Vector2Int topLeftCorner, Vector2Int bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
+    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, ProceduralGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
         xPosMin = topLeftCorner.x + GAP;
         zPosMin = topLeftCorner.y + GAP;

@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.addressables": {
-      "version": "1.18.16",
+      "version": "1.18.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -15,7 +15,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.7.8",
+      "version": "2.7.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -45,7 +45,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.11",
+      "version": "2.0.12",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -117,7 +117,7 @@
       }
     },
     "com.unity.test-framework": {
-      "version": "1.1.29",
+      "version": "1.1.30",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -137,7 +137,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.5.6",
+      "version": "1.5.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
