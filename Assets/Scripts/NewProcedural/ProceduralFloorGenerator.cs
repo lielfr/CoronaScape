@@ -26,9 +26,69 @@ public class ProceduralFloorGenerator : MonoBehaviour
     public GameObject coinPrefab;
     public GameObject boxPrefab;
 
-    private bool IsRoomAreaAvailable()
+    private const float EPSILON = 1e-10f;
+    private int rectCounter = 0;
+
+    public List<RoomBaseCoordinates> roomBases = new List<RoomBaseCoordinates>();
+    // Done in two steps to avoid removing rooms from the same rectangle
+    private List<RoomBaseCoordinates> tempRoomBases = new List<RoomBaseCoordinates>();
+
+    private bool ApproxEqual(float a, float b) {
+        return Mathf.Abs(a - b) < EPSILON;
+    }
+
+    private bool LinesIntersect(Vector2 lineAStart, Vector2 lineAEnd, Vector2 lineBStart, Vector2 lineBEnd)
     {
-        return false;
+        float slopeA = (lineAEnd.y - lineAStart.y) / (lineAEnd.x - lineAStart.x);
+        float slopeB = (lineBEnd.y - lineBStart.y) / (lineBEnd.x - lineBStart.x);
+
+        float interceptA = lineAStart.y - slopeA * lineAStart.x;
+        float interceptB = lineBStart.y - slopeB * lineBStart.x;
+
+        if (ApproxEqual(slopeA, slopeB))
+            return ApproxEqual(interceptA, interceptB) &&
+                ((lineAStart.x <= lineBStart.x && lineAStart.y <= lineBStart.y) ||
+                    (lineAStart.x >= lineBStart.x && lineAStart.y >= lineBStart.y)
+                );
+
+        float xIntersect = (interceptB - interceptA) / (slopeA - slopeB);
+        float yIntersect = slopeA * xIntersect + interceptA;
+
+        bool intersectA = yIntersect <= lineAStart.y &&
+            yIntersect >= lineAEnd.y &&
+            xIntersect <= lineAStart.x
+            && xIntersect >= lineAEnd.x;
+
+        bool intersectB = yIntersect <= lineBStart.y &&
+            yIntersect >= lineBEnd.y &&
+            xIntersect <= lineBStart.x
+            && xIntersect >= lineBEnd.x;
+
+        return intersectA && intersectB;
+
+
+    }
+
+    private bool IsRoomAreaAvailable(RoomBaseCoordinates newRoomBase)
+    {
+        bool intersect = false;
+
+        Vector2Pair[] newBasePairs = newRoomBase.getPairs();
+
+        foreach (var otherRoomBase in roomBases)
+        {
+            Vector2Pair[] otherBasePairs = otherRoomBase.getPairs();
+            foreach (var newPair in newBasePairs)
+            {
+                foreach (var otherPair in otherBasePairs)
+                {
+                    intersect |= LinesIntersect(newPair.first, newPair.second, otherPair.first, otherPair.second);
+                    if (intersect)
+                        return false;
+                }
+            }
+        }
+        return !intersect;
     }
 
     object[] NewRoomShape(Vector3 baseTopLeftCorner, float roomWidth, float roomBreadth, float rotationAngle = 0f, bool flipTriangles = false)
@@ -123,7 +183,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
         return retArr;
     }
 
-    Mesh NewRoom(Vector3 baseTopLeftCorner, float rotationAngle = 0f)
+    Mesh NewRoom(Vector3 baseTopLeftCorner, float rotationAngle, Matrix4x4 translation)
     {
         List<CombineInstance> combineInstances = new List<CombineInstance>();
 
@@ -191,6 +251,20 @@ public class ProceduralFloorGenerator : MonoBehaviour
         ret.CombineMeshes(combineInstances.ToArray(), true);
         ret.RecalculateNormals();
 
+        RoomBaseCoordinates roomBase = new RoomBaseCoordinates(
+            (Vector3)innerData[5],
+            (Vector3)innerData[6],
+            (Vector3)innerData[7],
+            (Vector3)innerData[8]
+        );
+
+        roomBase = translation * roomBase;
+
+        if (!IsRoomAreaAvailable(roomBase))
+            return null;
+
+        tempRoomBases.Add(roomBase);
+
         //Room newRoom = new Room(
         //    new Vector2(((Vector3)innerData[5]).x, ((Vector3)innerData[5]).z),
         //    new Vector2(((Vector3)innerData[8]).x, ((Vector3)innerData[8]).z),
@@ -209,16 +283,18 @@ public class ProceduralFloorGenerator : MonoBehaviour
     Mesh NewRect(Vector3 topLeftCorner, float width, float height, float rotationAngle = 0f)
     {
         Matrix4x4 rotationMatrix = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f));
+        Vector3 tempTopLeft = new Vector3(-width / 2, 0, height / 2);
+        Matrix4x4 translateToActualCoords = Matrix4x4.Translate(topLeftCorner - tempTopLeft);
         Mesh ret = new Mesh();
         Mesh rectMesh = new Mesh();
         List<CombineInstance> combineInstances = new List<CombineInstance>();
-        Vector3 topRightCorner = topLeftCorner + new Vector3(
+        Vector3 topRightCorner = tempTopLeft + new Vector3(
             width,
             0f,
             0f
         );
 
-        Vector3 bottomLeftCorner = topLeftCorner - new Vector3(
+        Vector3 bottomLeftCorner = tempTopLeft - new Vector3(
             0f,
             0f,
             height
@@ -233,7 +309,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         Vector3[] vertices = new Vector3[]
         {
-            rotationMatrix * topLeftCorner,
+            rotationMatrix * tempTopLeft,
             rotationMatrix * topRightCorner,
             rotationMatrix * bottomRightCorner,
             rotationMatrix * bottomLeftCorner
@@ -246,31 +322,34 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
         // TODO: Add rooms here
 
-        Vector3 topWidth = topRightCorner - topLeftCorner;
+        Vector3 topWidth = topRightCorner - tempTopLeft;
         int numRoomsW = Mathf.FloorToInt(topWidth.magnitude / roomWidth);
 
         for (int i = 0; i < numRoomsW; i++)
         {
-            Mesh roomTop = NewRoom(topLeftCorner + new Vector3(i * roomWidth, 0f, 0f), rotationAngle);
-            Mesh roomBottom = NewRoom(topRightCorner - new Vector3((i+1) * roomWidth, 0f, 0f), rotationAngle + 180f);
-            Vector3 centerOffset = new Vector3((float)((i + 0.5f) * roomWidth), 0f, 0f);
-            centerOffset = Matrix4x4.Rotate(Quaternion.Euler(0f, rotationAngle, 0f)).MultiplyPoint3x4(centerOffset);
-            centerOffset = -centerOffset;
-            Matrix4x4 rotateCenter = Matrix4x4.Translate(centerOffset) * Matrix4x4.Rotate(Quaternion.Euler(0f, 180f, 0f)) * Matrix4x4.Translate(-centerOffset);
-            CombineInstance topRoomCombiner = new CombineInstance()
+            Mesh roomTop = NewRoom(tempTopLeft + new Vector3(i * roomWidth, 0f, 0f), rotationAngle, translateToActualCoords);
+            Mesh roomBottom = NewRoom(topRightCorner - new Vector3((i + 1) * roomWidth, 0f, 0f), rotationAngle + 180f, translateToActualCoords);
+            if (roomTop != null)
             {
-                mesh = roomTop,
-                subMeshIndex = 0,
-                transform = Matrix4x4.identity
-            };
-            combineInstances.Add(topRoomCombiner);
-            CombineInstance bottomRoomCombiner = new CombineInstance()
+                CombineInstance topRoomCombiner = new CombineInstance()
+                {
+                    mesh = roomTop,
+                    subMeshIndex = 0,
+                    transform = Matrix4x4.identity
+                };
+                combineInstances.Add(topRoomCombiner);
+            }
+
+            if (roomBottom != null)
             {
-                mesh = roomBottom,
-                subMeshIndex = 0,
-                transform = Matrix4x4.identity
-            };
-            combineInstances.Add(bottomRoomCombiner);
+                CombineInstance bottomRoomCombiner = new CombineInstance()
+                {
+                    mesh = roomBottom,
+                    subMeshIndex = 0,
+                    transform = Matrix4x4.identity
+                };
+                combineInstances.Add(bottomRoomCombiner);
+            }
         }
 
         //Mesh testRoom = NewRoom(topLeftCorner, rotationAngle);
@@ -281,6 +360,9 @@ public class ProceduralFloorGenerator : MonoBehaviour
         //    transform = Matrix4x4.identity
         //};
         //combineInstances.Add(testRoomCombineInstance);
+
+        roomBases.AddRange(tempRoomBases.Select(v => translateToActualCoords * v).ToArray());
+        tempRoomBases.Clear();
 
         rectMesh.vertices = vertices;
         rectMesh.triangles = triangles;
@@ -294,8 +376,11 @@ public class ProceduralFloorGenerator : MonoBehaviour
         combineInstances.Add(rectCombiner);
 
         ret.CombineMeshes(combineInstances.ToArray(), true);
-        ret.RecalculateNormals();
+        
 
+        ret.vertices = ret.vertices.Select(v => translateToActualCoords.MultiplyPoint3x4(v)).ToArray();
+        ret.RecalculateNormals();
+        rectCounter += 1;
         return ret;
 
     }
@@ -368,6 +453,8 @@ public class ProceduralFloorGenerator : MonoBehaviour
     {
         MeshFilter filter = GetComponent<MeshFilter>();
         filter.mesh.Clear();
+        rectCounter = 0;
+        roomBases.Clear();
     }
 
     public void GenerateLayout()
@@ -386,16 +473,16 @@ public class ProceduralFloorGenerator : MonoBehaviour
         };
         combineInstances.Add(baseCombineInstance);
 
-        //for (int i = 0; i < numRects - 1; i++)
-        //{
-        //    CombineInstance combineInstance = new CombineInstance
-        //    {
-        //        mesh = ExtendBaseRect(new Vector3(0, 0, 0), width, height, width, height),
-        //        subMeshIndex = 0,
-        //        transform = Matrix4x4.identity
-        //    };
-        //    combineInstances.Add(combineInstance);
-        //}
+        for (int i = 0; i < numRects - 1; i++)
+        {
+            CombineInstance combineInstance = new CombineInstance
+            {
+                mesh = ExtendBaseRect(new Vector3(0, 0, 0), width, height, width, height),
+                subMeshIndex = 0,
+                transform = Matrix4x4.identity
+            };
+            combineInstances.Add(combineInstance);
+        }
 
 
         Mesh combinedMesh = new Mesh();
