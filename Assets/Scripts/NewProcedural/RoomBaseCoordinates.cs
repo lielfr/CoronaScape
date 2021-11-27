@@ -9,12 +9,21 @@ public struct RoomBaseCoordinates
         this.topRight = new Vector2(topRight.x, topRight.z);
         this.bottomLeft = new Vector2(bottomLeft.x, bottomLeft.z);
         this.bottomRight = new Vector2(bottomRight.x, bottomRight.z);
+        topLeftOrig = topLeft;
+        topRightOrig = topRight;
+        bottomLeftOrig = bottomLeft;
+        bottomRightOrig = bottomRight;
     }
 
     public Vector2 topLeft { get; }
     public Vector2 topRight { get; }
     public Vector2 bottomLeft { get; }
     public Vector2 bottomRight { get; }
+
+    public Vector3 topLeftOrig { get; }
+    public Vector3 topRightOrig { get; }
+    public Vector3 bottomLeftOrig { get; }
+    public Vector3 bottomRightOrig { get; }
 
     public Vector2Pair[] getPairs()
     {
@@ -30,16 +39,10 @@ public struct RoomBaseCoordinates
 
     public static RoomBaseCoordinates operator *(Matrix4x4 m, RoomBaseCoordinates coords)
     {
-        Vector3 newTopLeft = new Vector3(coords.topLeft.x, 0, coords.topLeft.y);
-        Vector3 newTopRight = new Vector3(coords.topRight.x, 0, coords.topRight.y);
-        Vector3 newBottomLeft = new Vector3(coords.bottomLeft.x, 0, coords.bottomLeft.y);
-        Vector3 newBottomRight = new Vector3(coords.bottomRight.x, 0, coords.bottomRight.y);
-
-        newTopLeft = m.MultiplyPoint3x4(newTopLeft);
-        newTopRight = m.MultiplyPoint3x4(newTopRight);
-        newBottomLeft = m.MultiplyPoint3x4(newBottomLeft);
-        newBottomRight = m.MultiplyPoint3x4(newBottomRight);
-
-        return new RoomBaseCoordinates(newTopLeft, newTopRight, newBottomLeft, newBottomRight);
+        return new RoomBaseCoordinates(m.MultiplyPoint3x4(coords.topLeftOrig),
+            m.MultiplyPoint3x4(coords.topRightOrig),
+            m.MultiplyPoint3x4(coords.bottomLeftOrig),
+            m.MultiplyPoint3x4(coords.bottomRightOrig)
+        );
     }
 }
