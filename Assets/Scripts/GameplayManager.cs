@@ -163,6 +163,7 @@ public class GameplayManager : MonoBehaviour
         }
         countdownText.enabled = false;
         menuController.IsDisabled = false;
+        movementController.enabled = true;
         healthBarController.DisplayBar();
         timerController.StartTimer();
     }
