@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEditor.AI;
+using UnityEngine.AI;
 using System.Linq;
 
 public class ProceduralFloorGenerator : MonoBehaviour

@@ -1,13 +1,23 @@
 using GameEnums;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimerController : MonoBehaviour
 {
+    #region Singleton
+    public static TimerController instance;
+    public void Awake()
+    {
+        instance = this;
+        isEnabled = false;
+    }
+    #endregion
+
     #region Fields
-    private Text timerText;
+    public TextMeshProUGUI timerText;
     private float remaining;
     private bool isEnabled;
     #endregion
@@ -15,19 +25,6 @@ public class TimerController : MonoBehaviour
     #region Properties
     public bool IsEnabled { get => isEnabled; }
     #endregion
-
-    private void Awake()
-    {
-        remaining = GameplayManager.LevelTime;
-        isEnabled = false;
-    }
-
-    private void Start()
-    {
-        timerText = GetComponent<Text>();
-        SetText(remaining);
-        isEnabled = true;
-    }
 
     void Update()
     {
@@ -47,6 +44,7 @@ public class TimerController : MonoBehaviour
     public void ResetTimer(float value)
     {
         remaining = value;
+        SetText(remaining);
     }
 
     public void StartTimer()

@@ -5,26 +5,24 @@ using UnityEngine.UI;
 
 public class HealthBarController : MonoBehaviour
 {
-    #region Fields
-    private Slider slider;
-    private Image fill;
-    private float maxHealth;
-    private bool isEmpty;
-    private float currentHealth;
+    #region Singleton
+    public static HealthBarController instance;
+    public void Awake()
+    {
+        instance = this;
+    }
     #endregion
 
+    #region Fields
+    [SerializeField]
+    private Slider slider;
+    [SerializeField]
+    private Image fill;
+    private float maxHealth;
+    private float currentHealth;
+    private bool isEmpty = false;
     private bool handlingMessage = false;
-    private void Awake()
-    {
-        maxHealth = GameplayManager.Health;
-    }
-
-    private void Start()
-    {
-        slider = GetComponent<UnityEngine.UI.Slider>();
-        fill = GameObject.Find("HealthBarFill").GetComponent<Image>();
-        ResetHealth(maxHealth);
-    }
+    #endregion
 
     public void ResetHealth(float value)
     {
@@ -33,7 +31,6 @@ public class HealthBarController : MonoBehaviour
         isEmpty = currentHealth <= 0;
         Fill();
     }
-
 
     public IEnumerator PlayerDamaged(float value)
     {

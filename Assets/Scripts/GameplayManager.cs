@@ -1,19 +1,37 @@
 using GameEnums;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
+    #region Singleton
+    public static GameplayManager instance;
+    public void Awake()
+    {
+        instance = this;
+    }
+    #endregion
+
     #region Required References
+    public Text greenPotionText;
+    public Text redPotionText;
+    public Text bluePotionText;
     public TextMeshProUGUI gameOverText;
-    private PlayerMovement movementController;
+    public TextMeshProUGUI countdownText;
+    public PlayerMovement movementController;
     private TimerController timerController;
     private HealthBarController healthBarController;
     private ScoreController scoreController;
+    private MenuController menuController;
     #endregion
 
-
     #region Fields
+    private int greenPotionCount = 0;
+    private int redPotionCount = 0;
+    private int bluePotionCount = 0;
+    private bool handlingPotion = false;
     private bool isGameOver = false;
     private bool handlingMessage = false;
     private static int coinScore;
@@ -82,12 +100,7 @@ public class GameplayManager : MonoBehaviour
     }
     #endregion
 
-    #region Properties
-    public static float LevelTime { get => levelTime; }
-    public static float Health { get => health; }
-    #endregion
-
-    private void Awake()
+    void Start()
     {
         if (SceneChanger.Difficulty == 0)
             Difficulty = Difficulty.EASY;
@@ -97,11 +110,61 @@ public class GameplayManager : MonoBehaviour
             Difficulty = Difficulty.HARD;
         if (SceneChanger.Difficulty == 3)
             Difficulty = Difficulty.EXTREME;
-        movementController = FindObjectOfType<PlayerMovement>();
-        timerController = FindObjectOfType<TimerController>();
-        healthBarController = FindObjectOfType<HealthBarController>();
-        scoreController = FindObjectOfType<ScoreController>();
+
+        timerController = TimerController.instance;
+        healthBarController = HealthBarController.instance;
+        scoreController = ScoreController.instance;
+        menuController = MenuController.instance;
+
+        StartNewGame();
+    }
+
+    public void StartNewGame()
+    {
+        movementController.enabled = false;
+        menuController.IsDisabled = true;
         gameOverText.enabled = false;
+        timerController.ResetTimer(levelTime);
+        healthBarController.ResetHealth(health);
+        healthBarController.HideBar();
+        redPotionCount = 0;
+        greenPotionCount = 0;
+        bluePotionCount = 0;
+        redPotionText.text = "0";
+        greenPotionText.text = "0";
+        bluePotionText.text = "0";
+        handlingPotion = false;
+
+        StartCoroutine(CountdownAndRun(3));
+    }
+
+    public void PauseGame()
+    {
+        movementController.enabled = false;
+        healthBarController.HideBar();
+        timerController.StopTimer();
+    }
+
+    public void ContinueGame()
+    {
+        menuController.IsDisabled = true;
+        StartCoroutine(CountdownAndRun(3));
+    }
+
+    private IEnumerator CountdownAndRun(int seconds)
+    {
+        countdownText.enabled = true;
+        int count = seconds;
+        while (count > 0)
+        {
+            countdownText.text = count.ToString();
+            yield return new WaitForSeconds(1);
+            count--;
+        }
+        countdownText.enabled = false;
+        menuController.IsDisabled = false;
+        healthBarController.DisplayBar();
+        timerController.StartTimer();
     }
 
     public void Collect(CollectableItems type)
@@ -109,18 +172,71 @@ public class GameplayManager : MonoBehaviour
         switch (type)
         {
             case CollectableItems.Coin:
-                gameObject.BroadcastMessage("AddScore", coinScore);
+                scoreController.AddScore(coinScore);
                 break;
             case CollectableItems.Box:
-                gameObject.BroadcastMessage("AddScore", Random.Range(0, boxScore + 1));
+                scoreController.AddScore(Random.Range(0, boxScore + 1));
                 break;
             case CollectableItems.RedPotion:
-                gameObject.BroadcastMessage("AddTime", timePotion);
+                redPotionCount++;
+                redPotionText.text = redPotionCount.ToString();
                 break;
             case CollectableItems.GreenPotion:
-                gameObject.BroadcastMessage("AddHealth", Random.Range(0f, maxHeal));
+                greenPotionCount++;
+                greenPotionText.text = greenPotionCount.ToString();
                 break;
-            case CollectableItems.BluePotion: // not implemented
+            case CollectableItems.BluePotion:
+                bluePotionCount++;
+                bluePotionText.text = bluePotionCount.ToString();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void UseGreenPotion()
+    {
+        if (greenPotionCount > 0 && !handlingPotion)
+            StartCoroutine(TakePotionWithCooldown(1, CollectableItems.GreenPotion));
+    }
+
+    public void UseRedPotion()
+    {
+        if (redPotionCount > 0 && !handlingPotion)
+            StartCoroutine(TakePotionWithCooldown(1, CollectableItems.RedPotion));
+    }
+
+    public void UseBluePotion()
+    {
+        if (bluePotionCount > 0 && !handlingPotion)
+            StartCoroutine(TakePotionWithCooldown(1, CollectableItems.BluePotion));
+    }
+
+    private IEnumerator TakePotionWithCooldown(float seconds, CollectableItems type)
+    {
+        handlingPotion = true;
+        ApplyPotionEffect(type);
+        yield return new WaitForSeconds(seconds);
+        handlingPotion = false;
+    }
+
+    private void ApplyPotionEffect(CollectableItems type)
+    {
+        switch (type)
+        {
+            case CollectableItems.RedPotion:
+                redPotionCount--;
+                redPotionText.text = redPotionCount.ToString();
+                timerController.AddTime(timePotion);
+                break;
+            case CollectableItems.GreenPotion:
+                greenPotionCount--;
+                greenPotionText.text = greenPotionCount.ToString();
+                healthBarController.AddHealth(Random.Range(0f, maxHeal));
+                break;
+            case CollectableItems.BluePotion:
+                bluePotionCount--;
+                bluePotionText.text = bluePotionCount.ToString();
                 break;
             default:
                 break;
@@ -146,11 +262,10 @@ public class GameplayManager : MonoBehaviour
         if (!handlingMessage)
         {
             handlingMessage = true;
-            gameObject.BroadcastMessage("PlayerDamaged", /*-Random.Range(0f, maxDamage)*/ 100);
+            healthBarController.PlayerDamaged(Random.Range(0f, maxDamage));
             handlingMessage = false;
         }
     }
-
 
 
 }

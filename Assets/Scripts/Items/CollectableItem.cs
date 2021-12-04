@@ -9,7 +9,7 @@ public abstract class CollectableItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            gameObject.SendMessageUpwards("Collect", Type);
+            GameplayManager.instance.Collect(Type);
             Destroy(gameObject);
         }
     }
