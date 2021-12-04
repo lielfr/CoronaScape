@@ -14,17 +14,41 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Damage",
-                    "type": "PassThrough",
-                    "id": "ce035eb4-e5db-4b5a-bf6f-76a81680f489",
-                    "expectedControlType": "",
+                    "name": "Regenerate layout",
+                    "type": "Button",
+                    "id": "3d1a7843-e3f2-4020-9bf4-b522a2bce0a7",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "Regenerate layout",
+                    "name": "GreenPotion",
                     "type": "Button",
-                    "id": "3d1a7843-e3f2-4020-9bf4-b522a2bce0a7",
+                    "id": "b25c3cb9-c950-4e90-95f8-f1b0c581a26b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RedPotion",
+                    "type": "Button",
+                    "id": "38c58673-de94-4d8c-bdec-87931e043436",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "BluePotion",
+                    "type": "Button",
+                    "id": "975fd44e-e63e-46c2-baf0-5f697ee2bc37",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "OpenMenu",
+                    "type": "Button",
+                    "id": "95807934-459a-425d-bfa7-1c75904875eb",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -132,23 +156,56 @@
                 },
                 {
                     "name": "",
-                    "id": "35635453-3da8-44cb-b26a-e884a54eabc3",
-                    "path": "<Keyboard>/m",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Damage",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "45167a04-52e0-423d-bf86-502379f5edce",
                     "path": "<Keyboard>/space",
                     "interactions": "Tap",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Regenerate layout",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc59db9b-0ae6-4dc5-8418-052bd276262f",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GreenPotion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "285a54d7-780a-4ee1-a984-e07f680cce3d",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RedPotion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6423c5e8-b9ec-405f-bfe6-abf596d2ea85",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BluePotion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4261983f-f441-4acd-a40a-3f3b1b7c2438",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
