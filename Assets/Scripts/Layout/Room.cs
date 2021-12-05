@@ -23,15 +23,15 @@ public class Room
 
     private const int GAP = 5;
 
-    private ProceduralFloorGenerator generator;
+    private GameObject parent;
 
-    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, ProceduralFloorGenerator generator, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
+    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
         xPosMin = topLeftCorner.x + GAP;
         zPosMin = topLeftCorner.y + GAP;
         xPosMax = bottomRightCorner.x - GAP;
         zPosMax = bottomRightCorner.y - GAP;
-        this.generator = generator;
+        this.parent = parent;
         this.redPotionPrefab = redPotionPrefab;
         this.bluePotionPrefab = bluePotionPrefab;
         this.greenPotionPrefab = greenPotionPrefab;
@@ -69,7 +69,7 @@ public class Room
                         break;
                     }
             }
-            generatedPotion.transform.parent = generator.transform;
+            generatedPotion.transform.parent = parent.transform;
             currentPotionsQuantity++;
         }
     }
@@ -87,13 +87,13 @@ public class Room
                 case moneyTypes.COIN:
                     {
                         GameObject generatedMoney = GameObject.Instantiate(coinPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedMoney.transform.parent = generator.transform;
+                        generatedMoney.transform.parent = parent.transform;
                         break;
                     }
                 case moneyTypes.BOX:
                     {
                         GameObject generatedMoney = GameObject.Instantiate(boxPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
-                        generatedMoney.transform.parent = generator.transform;
+                        generatedMoney.transform.parent = parent.transform;
                         break;
                     }
             }
