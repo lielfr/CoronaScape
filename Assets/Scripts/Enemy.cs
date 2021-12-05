@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float dangerRadius = 200.0f;
+    private float dangerRadius = 500.0f;
 
     private Transform target;
     private NavMeshAgent agent;
@@ -42,20 +42,24 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        target = player.transform;
+        player = PlayerManager.instance.player;
         agent = GetComponent<NavMeshAgent>();
     }
 
     public void Update()
     {
-        
+        target = player.transform;
         float distance = Vector3.Distance(transform.position, target.position);
-        if(distance < dangerRadius)
-        {
-            agent.SetDestination(target.position);
-        } 
-        
-            
+        if(distance <= dangerRadius)
+            agent.SetDestination(target.position);   
+    }
+
+    void FacePlayer()
+    {
+        Vector3 dir = (target.position - transform.position).normalized;
+        Quaternion lookAt = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.y));
+        transform.rotation = lookAt;
+        Quaternion.Slerp(transform.rotation, lookAt, Time.deltaTime * 300.0f);
     }
 
     public void TakeDamage()
@@ -69,5 +73,10 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, dangerRadius);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
     }
 }
