@@ -30,6 +30,9 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
     public Material debugMaterial;
 
+    public GameObject roomsGameObj;
+    public GameObject floorGameObj;
+
     private const float EPSILON = 1e-10f;
     private int rectCounter = 0;
     private List<Mesh> debugMeshes = new List<Mesh>();
@@ -37,6 +40,15 @@ public class ProceduralFloorGenerator : MonoBehaviour
     public List<RoomBaseCoordinates> roomBases = new List<RoomBaseCoordinates>();
     // Done in two steps to avoid removing rooms from the same rectangle
     private List<RoomBaseCoordinates> tempRoomBases = new List<RoomBaseCoordinates>();
+
+    private List<CombineInstance> roomInstances = new List<CombineInstance>();
+
+    private GameObject collectibles;
+
+    public GameObject GetCollectibles()
+    {
+        return collectibles;
+    }
 
     private void drawDebugRect(Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight)
     {
@@ -303,10 +315,10 @@ public class ProceduralFloorGenerator : MonoBehaviour
         Vector3 coordB = (Vector3)innerData[8];
         coordB = translation.MultiplyPoint3x4(coordB);
 
-        Room newRoom = new Room(
+        new Room(
             new Vector2(coordA.x, coordA.z),
             new Vector2(coordB.x, coordB.z),
-            this,
+            collectibles,
             redPotionPrefab,
             bluePotionPrefab,
             greenPotionPrefab,
@@ -369,24 +381,26 @@ public class ProceduralFloorGenerator : MonoBehaviour
             Mesh roomBottom = NewRoom(topRightCorner - new Vector3((i + 1) * roomWidth, 0f, 0f), rotationAngle + 180f, translateToActualCoords);
             if (roomTop != null)
             {
+                roomTop.vertices = roomTop.vertices.Select(v => translateToActualCoords.MultiplyPoint3x4(v)).ToArray();
                 CombineInstance topRoomCombiner = new CombineInstance()
                 {
                     mesh = roomTop,
                     subMeshIndex = 0,
                     transform = Matrix4x4.identity
                 };
-                combineInstances.Add(topRoomCombiner);
+                roomInstances.Add(topRoomCombiner);
             }
 
             if (roomBottom != null)
             {
+                roomBottom.vertices = roomBottom.vertices.Select(v => translateToActualCoords.MultiplyPoint3x4(v)).ToArray();
                 CombineInstance bottomRoomCombiner = new CombineInstance()
                 {
                     mesh = roomBottom,
                     subMeshIndex = 0,
                     transform = Matrix4x4.identity
                 };
-                combineInstances.Add(bottomRoomCombiner);
+                roomInstances.Add(bottomRoomCombiner);
             }
         }
 
@@ -480,15 +494,26 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
     public void Clear()
     {
-        MeshFilter filter = GetComponent<MeshFilter>();
-        filter.mesh.Clear();
+        collectibles.transform.parent = null;
+        foreach (Transform child in collectibles.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach(Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
         rectCounter = 0;
         roomBases.Clear();
+        roomInstances.Clear();
     }
 
     public void GenerateLayout()
     {
-        MeshFilter filter = GetComponent<MeshFilter>();
+        MeshFilter roomsFilter = roomsGameObj.GetComponent<MeshFilter>();
+
+        MeshFilter floorFilter = floorGameObj.GetComponent<MeshFilter>();
+
         List<CombineInstance> combineInstances = new List<CombineInstance>();
 
         float baseRotation = Random.Range(0f, 360f);
@@ -520,7 +545,29 @@ public class ProceduralFloorGenerator : MonoBehaviour
         combinedMesh.RecalculateNormals();
         combinedMesh.RecalculateTangents();
         combinedMesh.Optimize();
-        filter.mesh = combinedMesh;
+        floorFilter.mesh = combinedMesh;
+        
+
+        Mesh roomsMesh = new Mesh();
+        roomsMesh.CombineMeshes(roomInstances.ToArray(), true);
+        roomsMesh.RecalculateNormals();
+        roomsMesh.RecalculateNormals();
+        roomsMesh.RecalculateTangents();
+        roomsMesh.Optimize();
+        roomsFilter.mesh = roomsMesh;
+
+        collectibles.transform.parent = transform;
+
+        NavMeshSurface surface = floorGameObj.GetComponent<NavMeshSurface>();
+        NavMeshObstacle obstacles = roomsGameObj.GetComponent<NavMeshObstacle>();
+        //NavMeshModifier modifier = floorGameObj.AddComponent<NavMeshModifier>();
+        //modifier.overrideArea = true;
+        //modifier.area = 1;
+        obstacles.carving = true;
+
+        
+        surface.layerMask = LayerMask.GetMask("Default");
+        surface.BuildNavMesh();
     }
 
     public void OnRegenerateAction(InputAction.CallbackContext context)
@@ -533,8 +580,9 @@ public class ProceduralFloorGenerator : MonoBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
+        collectibles = new GameObject("Collectibles");
         GenerateLayout();
     }
 

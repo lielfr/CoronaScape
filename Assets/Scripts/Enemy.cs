@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
     private float health = 100f;
     private float laserDamage = 30f;
 
+    public GameObject player;
+
     private void Start()
     {
         switch (GameManager.Instance.Difficulty)
@@ -40,19 +42,19 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        target = PlayerManager.instance.player.transform;
+        target = player.transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
     public void Update()
     {
-        /*
+        
         float distance = Vector3.Distance(transform.position, target.position);
         if(distance < dangerRadius)
         {
             agent.SetDestination(target.position);
         } 
-        */
+        
             
     }
 
