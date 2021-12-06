@@ -568,6 +568,8 @@ public class ProceduralFloorGenerator : MonoBehaviour
         
         surface.layerMask = LayerMask.GetMask("Default");
         surface.BuildNavMesh();
+
+        roomsGameObj.GetComponent<MeshCollider>().sharedMesh = roomsMesh;
     }
 
     public void OnRegenerateAction(InputAction.CallbackContext context)
