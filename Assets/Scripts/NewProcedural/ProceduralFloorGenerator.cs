@@ -585,6 +585,19 @@ public class ProceduralFloorGenerator : MonoBehaviour
     void Awake()
     {
         collectibles = new GameObject("Collectibles");
+        switch (GameManager.Instance.Difficulty)
+        {
+            case GameEnums.Difficulty.EASY:
+                numRects = 2;
+                break;
+            case GameEnums.Difficulty.MEDIUM:
+            case GameEnums.Difficulty.HARD:
+                numRects = 3;
+                break;
+            case GameEnums.Difficulty.EXTREME:
+                numRects = 4;
+                break;
+        }
         GenerateLayout();
     }
 
