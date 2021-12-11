@@ -6,8 +6,8 @@ public class Room
 {
 
     // These numbers will later be based on difficulty
-    private int potionsQuantity = 40;
-    private int moneyQuantity = 20;
+    private static int potionsQuantity = 40;
+    private static int moneyQuantity = 20;
     /* ---------- Necessary prefabs ---------- */
     public GameObject redPotionPrefab;
     public GameObject bluePotionPrefab;
@@ -21,22 +21,41 @@ public class Room
     private enum moneyTypes { COIN = 1, BOX = 2 };
     private int moneyTypesQuantity = 2;
 
-    private const int GAP = 5;
-
     private GameObject parent;
 
     public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
     {
-        xPosMin = topLeftCorner.x + GAP;
-        zPosMin = topLeftCorner.y + GAP;
-        xPosMax = bottomRightCorner.x - GAP;
-        zPosMax = bottomRightCorner.y - GAP;
+        var minWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.15f);
+        var maxWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.85f);
+        xPosMin = minWithGaps.x;
+        zPosMin = minWithGaps.y;
+        xPosMax = maxWithGaps.x;
+        zPosMax = maxWithGaps.y;
         this.parent = parent;
         this.redPotionPrefab = redPotionPrefab;
         this.bluePotionPrefab = bluePotionPrefab;
         this.greenPotionPrefab = greenPotionPrefab;
         this.coinPrefab = coinPrefab;
         this.boxPrefab = boxPrefab;
+        switch (GameManager.Instance.Difficulty)
+        {
+            case GameEnums.Difficulty.EASY:
+                potionsQuantity = 40;
+                moneyQuantity = 20;
+                break;
+            case GameEnums.Difficulty.MEDIUM:
+                potionsQuantity = 30;
+                moneyQuantity = 15;
+                break;
+            case GameEnums.Difficulty.HARD:
+                potionsQuantity = 20;
+                moneyQuantity = 10;
+                break;
+            case GameEnums.Difficulty.EXTREME:
+                potionsQuantity = 10;
+                moneyQuantity = 5;
+                break;
+        }
         GeneratePotions();
         GenerateMoney();
     }
@@ -46,26 +65,25 @@ public class Room
         int currentPotionsQuantity = 0;
         while (currentPotionsQuantity < potionsQuantity)
         {
-            float xRandomPos = Random.Range(xPosMin, xPosMax);
-            float zRandomPos = Random.Range(zPosMin, zPosMax);
+            Vector3 randomPos = new Vector3(xPosMin, 0, zPosMin) + new Vector3(Random.Range(0.2f, 1f) * (xPosMax - xPosMin), 0, Random.Range(0.4f, 1f) * (zPosMax - zPosMin));
             potionTypes potionType = (potionTypes)Random.Range(1, potionTypesQuantity + 1);
             GameObject generatedPotion;
             switch (potionType)
             {
                 case potionTypes.BLUE:
                     {
-                        generatedPotion = Object.Instantiate(bluePotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(bluePotionPrefab, randomPos, Quaternion.identity);
                         break;
                     }
                 case potionTypes.RED:
                     {
-                        generatedPotion = Object.Instantiate(redPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(redPotionPrefab, randomPos, Quaternion.identity);
                         break;
                     }
                 default:
                     {
                         // Used default here just to suppress the annoying uninitialized local variable error.
-                        generatedPotion = Object.Instantiate(greenPotionPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        generatedPotion = Object.Instantiate(greenPotionPrefab, randomPos, Quaternion.identity);
                         break;
                     }
             }
@@ -79,20 +97,19 @@ public class Room
         int currentMoneyQuantity = 0;
         while (currentMoneyQuantity < moneyQuantity)
         {
-            float xRandomPos = Random.Range(xPosMin, xPosMax); 
-            float zRandomPos = Random.Range(zPosMin, zPosMax); 
+            Vector3 randomPos = new Vector3(xPosMin, 0, zPosMin) + new Vector3(Random.Range(0.2f, 1f) * (xPosMax - xPosMin), 0, Random.Range(0.2f, 1f) * (zPosMax - zPosMin));
             moneyTypes potionType = (moneyTypes)Random.Range(1, moneyTypesQuantity + 1);
             switch (potionType)
             {
                 case moneyTypes.COIN:
                     {
-                        GameObject generatedMoney = GameObject.Instantiate(coinPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        GameObject generatedMoney = GameObject.Instantiate(coinPrefab, randomPos, Quaternion.identity);
                         generatedMoney.transform.parent = parent.transform;
                         break;
                     }
                 case moneyTypes.BOX:
                     {
-                        GameObject generatedMoney = GameObject.Instantiate(boxPrefab, new Vector3(xRandomPos, 0, zRandomPos), Quaternion.identity);
+                        GameObject generatedMoney = GameObject.Instantiate(boxPrefab, randomPos, Quaternion.identity);
                         generatedMoney.transform.parent = parent.transform;
                         break;
                     }

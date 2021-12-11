@@ -12,6 +12,7 @@ public class SceneChanger : MonoBehaviour
 
     public void ChangeDifficulty()
     {
-        Difficulty = FindObjectOfType<TMPro.TMP_Dropdown>().value;
+        Difficulty = FindObjectOfType<TMPro.TMP_Dropdown>().value + 1; // 0 Is None, which we don't want.
+        GameManager.Instance.Difficulty = (GameEnums.Difficulty)Difficulty;
     }
 }
