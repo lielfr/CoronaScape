@@ -468,15 +468,15 @@ public class ProceduralFloorGenerator : MonoBehaviour
 
 
         bool direction = Random.Range(0, 2) == 1;
-        float offset = Random.Range(0f, 1f);
+        float offset = Random.Range(0.5f, 1f);
 
         Vector3 newCenter = direction ? (baseTopLeft + offset * diag1) : (baseTopRight + offset * diag2);
 
-        Mesh ret = NewRectCenter(newCenter, width, height, Random.Range(0f, 90f));
+        Mesh ret = NewRectCenter(newCenter, width, height, Random.Range(45f, 90f));
 
         newCenter = ret.vertices[0] + (ret.vertices[2] - ret.vertices[0]);
 
-        float translationMagnitude = Random.Range(0f, 1f);
+        float translationMagnitude = Random.Range(0.5f, 1f);
 
         Matrix4x4 translationMatrix = Matrix4x4.Translate(translationMagnitude * (newCenter - baseCenterPoint));
 
@@ -585,6 +585,19 @@ public class ProceduralFloorGenerator : MonoBehaviour
     void Awake()
     {
         collectibles = new GameObject("Collectibles");
+        switch (GameManager.Instance.Difficulty)
+        {
+            case GameEnums.Difficulty.EASY:
+                numRects = 2;
+                break;
+            case GameEnums.Difficulty.MEDIUM:
+            case GameEnums.Difficulty.HARD:
+                numRects = 3;
+                break;
+            case GameEnums.Difficulty.EXTREME:
+                numRects = 4;
+                break;
+        }
         GenerateLayout();
     }
 
