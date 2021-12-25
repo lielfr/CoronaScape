@@ -15,7 +15,11 @@ public class GameManager
     #region Level
     public int Level { get; private set; } = 1;
     public void NextLevel() => Level++;
-    public void RestartGame() => Level = 1;
+    public void RestartGame()
+    {
+        Level = 1;
+        GameplayManager.instance.StartNewGame();
+    }
     #endregion
 
     #region Difficulty
