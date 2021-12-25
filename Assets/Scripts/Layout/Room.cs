@@ -14,6 +14,7 @@ public class Room
     public GameObject greenPotionPrefab;
     public GameObject coinPrefab;
     public GameObject boxPrefab;
+    public GameObject keyPrefab;
     /* ---------- Other necessary info ---------- */
     private float xPosMin, xPosMax, zPosMin, zPosMax;
     private enum potionTypes { BLUE = 1, GREEN = 2, RED = 3 };
@@ -23,7 +24,7 @@ public class Room
 
     private GameObject parent;
 
-    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab)
+    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab, GameObject keyPrefab)
     {
         var minWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.15f);
         var maxWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.85f);
@@ -37,6 +38,7 @@ public class Room
         this.greenPotionPrefab = greenPotionPrefab;
         this.coinPrefab = coinPrefab;
         this.boxPrefab = boxPrefab;
+        this.keyPrefab = keyPrefab;
         switch (GameManager.Instance.Difficulty)
         {
             case GameEnums.Difficulty.EASY:
@@ -58,6 +60,7 @@ public class Room
         }
         GeneratePotions();
         GenerateMoney();
+        GenerateKey();
     }
 
     void GeneratePotions()
@@ -90,6 +93,18 @@ public class Room
             generatedPotion.transform.parent = parent.transform;
             currentPotionsQuantity++;
         }
+    }
+
+    void GenerateKey()
+    {
+        Vector2 topLeft = new Vector2(xPosMin, zPosMin);
+        Vector2 topRight = new Vector2(xPosMax, zPosMin);
+        Vector2 bottomLeft = new Vector2(xPosMin, zPosMax);
+        Vector2 randomPos = Vector2.Lerp(topLeft, topRight, Random.Range(0f, 1f));
+        randomPos.y = Vector2.Lerp(topLeft, bottomLeft, Random.Range(0f, 1f)).y;
+
+        GameObject generatedKey = Object.Instantiate(keyPrefab, new Vector3(randomPos.x, 0, randomPos.y), Quaternion.identity);
+        generatedKey.transform.parent = parent.transform;
     }
 
     void GenerateMoney()

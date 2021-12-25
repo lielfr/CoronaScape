@@ -6,7 +6,8 @@
         Box,
         RedPotion,
         GreenPotion,
-        BluePotion
+        BluePotion,
+        Key
     }
 
     public enum Difficulty

@@ -18,9 +18,12 @@ public class GameplayManager : MonoBehaviour
     public Text greenPotionText;
     public Text redPotionText;
     public Text bluePotionText;
+    public Text keyText;
     public TextMeshProUGUI gameOverText;
+    public TextMeshProUGUI youWonText;
     public TextMeshProUGUI countdownText;
     public PlayerMovement movementController;
+    public ProceduralFloorGenerator proceduralGenerator;
     private TimerController timerController;
     private HealthBarController healthBarController;
     private ScoreController scoreController;
@@ -31,8 +34,10 @@ public class GameplayManager : MonoBehaviour
     private int greenPotionCount = 0;
     private int redPotionCount = 0;
     private int bluePotionCount = 0;
+    private int keyCount = 0;
     private bool handlingPotion = false;
     private bool isGameOver = false;
+    private bool playerWon = false;
     private bool handlingMessage = false;
     private static int coinScore;
     private static int boxScore;
@@ -124,6 +129,7 @@ public class GameplayManager : MonoBehaviour
         movementController.enabled = false;
         menuController.IsDisabled = true;
         gameOverText.enabled = false;
+        youWonText.enabled = false;
         timerController.ResetTimer(levelTime);
         healthBarController.ResetHealth(health);
         healthBarController.HideBar();
@@ -190,6 +196,15 @@ public class GameplayManager : MonoBehaviour
                 bluePotionCount++;
                 bluePotionText.text = bluePotionCount.ToString();
                 break;
+            case CollectableItems.Key:
+                keyCount++;
+                // TODO: Enable this once we have a key count
+                //keyText.text = keyCount.ToString();
+                if (keyCount == proceduralGenerator.numRooms)
+                {
+                    PlayerWon();
+                }
+                break;
             default:
                 break;
         }
@@ -244,16 +259,21 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    private void GameEnd()
+    {
+        movementController.enabled = false;
+        timerController.enabled = false;
+        scoreController.enabled = false;
+        healthBarController.HideBar();
+        healthBarController.enabled = false;
+    }
+
     public void GameOver()
     {
         if (!isGameOver)
         {
             gameOverText.enabled = true;
-            movementController.enabled = false;
-            timerController.enabled = false;
-            scoreController.enabled = false;
-            healthBarController.HideBar();
-            healthBarController.enabled = false;
+            GameEnd();
             isGameOver = true;
         }
     }
@@ -265,6 +285,16 @@ public class GameplayManager : MonoBehaviour
             handlingMessage = true;
             healthBarController.PlayerDamaged(Random.Range(0f, maxDamage));
             handlingMessage = false;
+        }
+    }
+
+    public void PlayerWon()
+    {
+        if (!playerWon)
+        {
+            youWonText.enabled = true;
+            GameEnd();
+            playerWon = true;
         }
     }
 

@@ -27,6 +27,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
     public GameObject greenPotionPrefab;
     public GameObject coinPrefab;
     public GameObject boxPrefab;
+    public GameObject keyPrefab;
 
     public Material debugMaterial;
 
@@ -42,6 +43,7 @@ public class ProceduralFloorGenerator : MonoBehaviour
     private List<RoomBaseCoordinates> tempRoomBases = new List<RoomBaseCoordinates>();
 
     private List<CombineInstance> roomInstances = new List<CombineInstance>();
+    public int numRooms = 0;
 
     private GameObject collectibles;
 
@@ -323,8 +325,11 @@ public class ProceduralFloorGenerator : MonoBehaviour
             bluePotionPrefab,
             greenPotionPrefab,
             coinPrefab,
-            boxPrefab
+            boxPrefab,
+            keyPrefab
         );
+
+        numRooms++;
 
 
         return ret;
