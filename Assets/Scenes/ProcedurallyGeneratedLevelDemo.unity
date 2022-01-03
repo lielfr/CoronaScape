@@ -2458,7 +2458,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.0885558, y: 1}
+    m_SensorSize: {x: 2.3069308, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2474,7 +2474,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855943924}
-  m_LocalRotation: {x: 0.07052045, y: 0.09502657, z: -0.0067488905, w: 0.9929508}
+  m_LocalRotation: {x: 0.07052045, y: 0.09502652, z: -0.006748887, w: 0.9929508}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2712,7 +2712,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.0885558, y: 1}
+    m_SensorSize: {x: 2.3069308, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3583,7 +3583,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6f4790172716b4337b792b8163aac7f9, type: 2}
+  - {fileID: 2100000, guid: 5b2e48dd6cea44ef5a66fd143cee415f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3666,7 +3666,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.0885558, y: 1}
+    m_SensorSize: {x: 2.3069308, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3682,7 +3682,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1443914190}
-  m_LocalRotation: {x: 0.10637748, y: 0.09472038, z: -0.010180449, w: 0.98975164}
+  m_LocalRotation: {x: 0.10637748, y: 0.094720386, z: -0.010180449, w: 0.98975164}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4120,7 +4120,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.0885558, y: 1}
+    m_SensorSize: {x: 2.3069308, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
