@@ -14,9 +14,19 @@ Try to finish the game in time, while collecting as much coins and boxes to maxi
 
 Good Luck!
 
+![Screen Shot 2022-01-03 at 23 55 20](https://user-images.githubusercontent.com/360928/147984652-c8418349-5379-4375-95b3-e0d97cf340b9.png)
+
+![Screen Shot 2022-01-03 at 23 57 02](https://user-images.githubusercontent.com/360928/147984805-2240808b-e385-46e6-b290-a7516ec2123b.png)
+
+![Screen Shot 2022-01-03 at 23 57 51](https://user-images.githubusercontent.com/360928/147984892-adf08134-c347-4455-8727-f24c91939416.png)
+
+
+
 ## Time Limit
 
 At the beginning of the game, the player can choose between four different levels of difficulty: Easy, medium, hard and extreme. The choice affects several parameters, as mentioned throughout this README.
+![Screen Shot 2022-01-03 at 23 40 34](https://user-images.githubusercontent.com/360928/147983365-da7355d7-e214-47b6-af5c-ebac2ae0fe5c.png)
+
 
 The time limit for each game is determined by the difficulty, as follows:
 
@@ -45,6 +55,15 @@ Here is the full level generation process:
 
 4. Each room (that has not been removed in the previous step) is populated with a key, potions, coins and boxes. The position of each object is determined by a linear interpolation of the room's coordinates (using random coefficients).
 
+Here are a few examples of generated layouts, viewed from the top:
+
+
+![Screen Shot 2022-01-03 at 23 52 15](https://user-images.githubusercontent.com/360928/147984358-92296aec-e622-4eef-b836-f92c57d5328c.png)
+![Screen Shot 2022-01-03 at 23 53 11](https://user-images.githubusercontent.com/360928/147984452-2505152d-2774-4620-85bf-f98a5500ba09.png)
+![Screen Shot 2022-01-03 at 23 54 02](https://user-images.githubusercontent.com/360928/147984515-3103e3d4-3048-4974-989d-f0ea36cfd607.png)
+
+
+
 ## Score System
 
 There are two ways to get score points:
@@ -55,13 +74,19 @@ There are two ways to get score points:
    - Hard: 5 points
    - Extreme: 5 points
 
+   ![Screen Shot 2022-01-03 at 23 48 46](https://user-images.githubusercontent.com/360928/147984065-68f6c609-e499-4d6c-b444-a176543dfc34.png)
+
 2. **Boxes**: Each box adds a random score, up to a maximal threshold, which also depends on the difficulty:
    - Easy: Up to 25 points
    - Medium: Up to 15 points
    - Hard: Up to 15 points
    - Extreme: Up to 10 points
 
+   ![Screen Shot 2022-01-03 at 23 49 23](https://user-images.githubusercontent.com/360928/147984123-132655b6-d8d2-406c-813d-fd885ff490f0.png)
+
 ## Keys
+
+![Screen Shot 2022-01-03 at 23 42 21](https://user-images.githubusercontent.com/360928/147983527-cd9fa178-9862-4c5e-80b3-58765435a31f.png)
 
 There is one key in each room. If the player manages to collect all of them before time runs out, the game ends and the player wins.
 
@@ -91,7 +116,12 @@ When the health reaches 0 points, or time runs out, the player loses the game.
 
 The player can collect three different types of spells during the game:
 
-* **Time Spell (red):** Adds a specified amount of time to the game. The exact amount depends on the difficulty:
+| Time Spell | Healing Spell | Power Strike |
+| ---------- | ------------- | ------------ |
+| ![Screen Shot 2022-01-03 at 23 43 25](https://user-images.githubusercontent.com/360928/147983618-1078f3b3-7477-4603-9bdf-1b45492e7013.png) | ![Screen Shot 2022-01-03 at 23 43 59](https://user-images.githubusercontent.com/360928/147983671-58bcd233-f11a-4bf3-a1a3-42dc63776836.png) | ![Screen Shot 2022-01-03 at 23 44 35](https://user-images.githubusercontent.com/360928/147983725-55e39609-e759-4749-9960-2066ca52c1d0.png) |
+
+* **Time Spell (red):**
+Adds a specified amount of time to the game. The exact amount depends on the difficulty:
   - Easy: 120 seconds
   - Medium: 60 seconds
   - Hard: 30 seconds
