@@ -283,7 +283,7 @@ public class GameplayManager : MonoBehaviour
         if (!handlingMessage)
         {
             handlingMessage = true;
-            healthBarController.PlayerDamaged(Random.Range(0f, maxDamage));
+            StartCoroutine(healthBarController.PlayerDamaged(Random.Range(0f, maxDamage)));
             handlingMessage = false;
         }
     }
