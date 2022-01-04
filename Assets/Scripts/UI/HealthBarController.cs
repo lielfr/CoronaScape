@@ -2,6 +2,7 @@ using GameEnums;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class HealthBarController : MonoBehaviour
 {
@@ -36,10 +37,11 @@ public class HealthBarController : MonoBehaviour
     {
         if (!handlingMessage)
         {
+            Debug.Log("Handling damage: " + value);
             handlingMessage = true;
             currentHealth -= value;
             Fill();
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSecondsRealtime(2f);
             handlingMessage = false;
         }
     }

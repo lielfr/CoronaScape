@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Enemy : MonoBehaviour
     private float laserDamage = 30f;
 
     public GameObject player;
+
+    private bool freezeMovement = false;
+    private bool isResumeRunning = false;
 
     private void Start()
     {
@@ -50,8 +54,8 @@ public class Enemy : MonoBehaviour
     {
         target = player.transform;
         float distance = Vector3.Distance(transform.position, target.position);
-        if(distance <= dangerRadius)
-            agent.SetDestination(target.position);   
+        if(!freezeMovement && distance <= dangerRadius)
+            agent.SetDestination(new Vector3(target.position.x, 0, target.position.z));
     }
 
     void FacePlayer()
@@ -77,6 +81,26 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        SendMessageUpwards("TakeDamage");
+        stopMovement();
     }
+
+    private IEnumerator resumeMovement()
+    {
+        isResumeRunning = true;
+        yield return new WaitForSecondsRealtime(3);
+        freezeMovement = false;
+        Debug.Log("Movement resumed");
+        isResumeRunning = false;
+    }
+
+    public void stopMovement()
+    {
+        freezeMovement = true;
+        //agent.SetDestination(transform.position);
+
+        if (!isResumeRunning)
+            StartCoroutine(resumeMovement());
+    }
+
 }
