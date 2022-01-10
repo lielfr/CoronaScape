@@ -10,9 +10,6 @@ public class Enemy : MonoBehaviour
     private Transform target;
     private NavMeshAgent agent;
 
-    private float health = 100f;
-    private float laserDamage = 30f;
-
     public GameObject player;
 
     private bool freezeMovement = false;
@@ -23,23 +20,18 @@ public class Enemy : MonoBehaviour
         switch (GameManager.Instance.Difficulty)
         {
             case GameEnums.Difficulty.NONE:
-                laserDamage = 30f;
                 dangerRadius = 200.0f;
                 break;
             case GameEnums.Difficulty.EASY:
-                laserDamage = 30f;
                 dangerRadius = 200.0f;
                 break;
             case GameEnums.Difficulty.MEDIUM:
-                laserDamage = 20f;
                 dangerRadius = 250.0f;
                 break;
             case GameEnums.Difficulty.HARD:
-                laserDamage = 20f;
                 dangerRadius = 300.0f;
                 break;
             case GameEnums.Difficulty.EXTREME:
-                laserDamage = 10f;
                 dangerRadius = 400.0f;
                 break;
             default:
@@ -54,8 +46,15 @@ public class Enemy : MonoBehaviour
     {
         target = player.transform;
         float distance = Vector3.Distance(transform.position, target.position);
-        if(!freezeMovement && distance <= dangerRadius)
+        if (!freezeMovement && distance <= dangerRadius)
+        {
+            SendMessageUpwards("ShowDangerText", null, SendMessageOptions.DontRequireReceiver);
             agent.SetDestination(new Vector3(target.position.x, 0, target.position.z));
+            FacePlayer();
+        } else
+        {
+            SendMessageUpwards("HideDangerText", null, SendMessageOptions.DontRequireReceiver);
+        }
     }
 
     void FacePlayer()
@@ -64,13 +63,6 @@ public class Enemy : MonoBehaviour
         Quaternion lookAt = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.y));
         transform.rotation = lookAt;
         Quaternion.Slerp(transform.rotation, lookAt, Time.deltaTime * 300.0f);
-    }
-
-    public void TakeDamage()
-    {
-        health -= laserDamage;
-        if(health <= 0)
-            Destroy(this);
     }
 
     private void OnDrawGizmosSelected()
@@ -90,14 +82,14 @@ public class Enemy : MonoBehaviour
         isResumeRunning = true;
         yield return new WaitForSecondsRealtime(3);
         freezeMovement = false;
-        Debug.Log("Movement resumed");
         isResumeRunning = false;
+        agent.isStopped = false;
     }
 
     public void stopMovement()
     {
         freezeMovement = true;
-        //agent.SetDestination(transform.position);
+        agent.isStopped = true;
 
         if (!isResumeRunning)
             StartCoroutine(resumeMovement());

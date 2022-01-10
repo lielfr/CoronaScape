@@ -37,7 +37,6 @@ public class HealthBarController : MonoBehaviour
     {
         if (!handlingMessage)
         {
-            Debug.Log("Handling damage: " + value);
             handlingMessage = true;
             currentHealth -= value;
             Fill();
