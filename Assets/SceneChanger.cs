@@ -7,6 +7,7 @@ public class SceneChanger : MonoBehaviour
 
     public void LoadMainScene()
     {
+        ChangeDifficulty();
         SceneManager.LoadScene("ProcedurallyGeneratedLevelDemo");
     }
 

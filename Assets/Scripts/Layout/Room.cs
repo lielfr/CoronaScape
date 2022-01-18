@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Room
+public class Room : MonoBehaviour
 {
+
+    private const int DIV_HORIZONTAL = 15;
+    private const int DIV_VERTICAL = 15;
 
     // These numbers will later be based on difficulty
     private static int potionsQuantity = 40;
@@ -22,9 +25,15 @@ public class Room
     private enum moneyTypes { COIN = 1, BOX = 2 };
     private int moneyTypesQuantity = 2;
 
+    /* ---------- Current room quantities ------------ */
+    private int currentPotions = 0;
+    private float spawnInterval;
+
+    
+
     private GameObject parent;
 
-    public  Room(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab, GameObject keyPrefab)
+    public void Init(Vector2 topLeftCorner, Vector2 bottomRightCorner, GameObject parent, GameObject redPotionPrefab, GameObject bluePotionPrefab, GameObject greenPotionPrefab, GameObject coinPrefab, GameObject boxPrefab, GameObject keyPrefab)
     {
         var minWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.15f);
         var maxWithGaps = Vector2.Lerp(topLeftCorner, bottomRightCorner, 0.85f);
@@ -58,17 +67,32 @@ public class Room
                 moneyQuantity = 5;
                 break;
         }
-        GeneratePotions();
+        
+        
         GenerateMoney();
         GenerateKey();
+        StartCoroutine(GeneratePotions());
     }
 
-    void GeneratePotions()
+    private Vector2 GetRandomPosition()
     {
-        int currentPotionsQuantity = 0;
-        while (currentPotionsQuantity < potionsQuantity)
+        Vector2 topLeft = new Vector2(xPosMin, zPosMin);
+        Vector2 topRight = new Vector2(xPosMax, zPosMin);
+        Vector2 bottomLeft = new Vector2(xPosMin, zPosMax);
+        Vector2 ret = Vector2.Lerp(topLeft, topRight, Random.Range(0f, 1f));
+        ret.y = Vector2.Lerp(topLeft, bottomLeft, Random.Range(0.3f, 1f)).y;
+        return ret;
+
+    }
+
+    private IEnumerator GeneratePotions()
+    {
+        yield return new WaitWhile(() => GameplayManager.levelTime == 0);
+        spawnInterval = GameplayManager.levelTime / potionsQuantity;
+        while (currentPotions < potionsQuantity)
         {
-            Vector3 randomPos = new Vector3(xPosMin, 0, zPosMin) + new Vector3(Random.Range(0.2f, 1f) * (xPosMax - xPosMin), 0, Random.Range(0.4f, 1f) * (zPosMax - zPosMin));
+            var randomPos2D = GetRandomPosition();
+            Vector3 randomPos = new Vector3(randomPos2D.x, 20, randomPos2D.y);
             potionTypes potionType = (potionTypes)Random.Range(1, potionTypesQuantity + 1);
             GameObject generatedPotion;
             switch (potionType)
@@ -91,19 +115,18 @@ public class Room
                     }
             }
             generatedPotion.transform.parent = parent.transform;
-            currentPotionsQuantity++;
+            currentPotions++;
+            yield return new WaitForSeconds(Random.Range(0f, spawnInterval));
         }
     }
 
     void GenerateKey()
     {
-        Vector2 topLeft = new Vector2(xPosMin, zPosMin);
-        Vector2 topRight = new Vector2(xPosMax, zPosMin);
-        Vector2 bottomLeft = new Vector2(xPosMin, zPosMax);
-        Vector2 randomPos = Vector2.Lerp(topLeft, topRight, Random.Range(0f, 1f));
-        randomPos.y = Vector2.Lerp(topLeft, bottomLeft, Random.Range(0f, 1f)).y;
+        
+        Vector2 randomPos = GetRandomPosition();
+        
 
-        GameObject generatedKey = Object.Instantiate(keyPrefab, new Vector3(randomPos.x, 0, randomPos.y), Quaternion.identity);
+        GameObject generatedKey = Object.Instantiate(keyPrefab, new Vector3(randomPos.x, 60, randomPos.y), Quaternion.identity);
         generatedKey.transform.parent = parent.transform;
     }
 

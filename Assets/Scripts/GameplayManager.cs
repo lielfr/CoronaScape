@@ -44,12 +44,12 @@ public class GameplayManager : MonoBehaviour
     private static float health;
     private static float maxHeal;
     private static float maxDamage;
-    private static float levelTime;
+    public static float levelTime;
     private static float timePotion;
     #endregion
 
     #region Difficulty
-    private static Difficulty difficuly;
+    private static Difficulty difficuly = Difficulty.EASY;
     public static Difficulty Difficulty
     {
         get => difficuly;
