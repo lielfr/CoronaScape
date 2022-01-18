@@ -48,12 +48,12 @@ public class Enemy : MonoBehaviour
         float distance = Vector3.Distance(transform.position, target.position);
         if (!freezeMovement && distance <= dangerRadius)
         {
-            SendMessageUpwards("ShowDangerText", null, SendMessageOptions.DontRequireReceiver);
+            SendMessageUpwards("DisplayDanger", null, SendMessageOptions.DontRequireReceiver);
             agent.SetDestination(new Vector3(target.position.x, 0, target.position.z));
             FacePlayer();
         } else
         {
-            SendMessageUpwards("HideDangerText", null, SendMessageOptions.DontRequireReceiver);
+            SendMessageUpwards("HideDanger", null, SendMessageOptions.DontRequireReceiver);
         }
     }
 

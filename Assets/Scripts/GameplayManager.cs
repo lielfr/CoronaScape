@@ -139,6 +139,7 @@ public class GameplayManager : MonoBehaviour
         redPotionText.text = "0";
         greenPotionText.text = "0";
         bluePotionText.text = "0";
+        keyText.text = $"0/{proceduralGenerator.numRooms}";
         handlingPotion = false;
 
         StartCoroutine(CountdownAndRun(3));
@@ -198,8 +199,7 @@ public class GameplayManager : MonoBehaviour
                 break;
             case CollectableItems.Key:
                 keyCount++;
-                // TODO: Enable this once we have a key count
-                //keyText.text = keyCount.ToString();
+                keyText.text = $"{keyCount}/{proceduralGenerator.numRooms}";
                 if (keyCount == proceduralGenerator.numRooms)
                 {
                     PlayerWon();
