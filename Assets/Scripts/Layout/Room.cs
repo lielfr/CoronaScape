@@ -103,7 +103,7 @@ public class Room
         Vector2 randomPos = Vector2.Lerp(topLeft, topRight, Random.Range(0f, 1f));
         randomPos.y = Vector2.Lerp(topLeft, bottomLeft, Random.Range(0f, 1f)).y;
 
-        GameObject generatedKey = Object.Instantiate(keyPrefab, new Vector3(randomPos.x, 0, randomPos.y), Quaternion.identity);
+        GameObject generatedKey = Object.Instantiate(keyPrefab, new Vector3(randomPos.x, 60, randomPos.y), Quaternion.identity);
         generatedKey.transform.parent = parent.transform;
     }
 
