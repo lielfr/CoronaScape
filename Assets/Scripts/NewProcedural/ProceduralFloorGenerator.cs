@@ -317,7 +317,8 @@ public class ProceduralFloorGenerator : MonoBehaviour
         Vector3 coordB = (Vector3)innerData[8];
         coordB = translation.MultiplyPoint3x4(coordB);
 
-        new Room(
+        var roomObj = collectibles.AddComponent<Room>();
+        roomObj.Init(
             new Vector2(coordA.x, coordA.z),
             new Vector2(coordB.x, coordB.z),
             collectibles,
