@@ -14,13 +14,13 @@ Try to finish the game in time, while collecting as much coins and boxes to maxi
 
 Good Luck!
 
-![Screenshot01](Images/Screenshot01.png)
+![Game Screenshot #1](Images/Screenshot01.png)
   
-![Screenshot01](Images/Screenshot02.png)
+![Game Screenshot #2](Images/Screenshot02.png)
   
-![Screenshot01](Images/Screenshot03.png)
+![Game Screenshot #3](Images/Screenshot03.png)
   
-![Screenshot01](Images/Screenshot04.png)
+![Game Screenshot #4](Images/Screenshot04.png)
 
 ## Time Limit
 
@@ -74,7 +74,7 @@ There are two ways to get score points:
    - Hard: 5 points
    - Extreme: 5 points
   
-![Screenshot01](Images/Coin.png)
+![Coin Screenshot](Images/Coin.png)
   
 2. **Boxes**: Each box adds a random score, up to a maximal threshold, which also depends on the difficulty:
    - Easy: Up to 25 points
@@ -82,11 +82,11 @@ There are two ways to get score points:
    - Hard: Up to 15 points
    - Extreme: Up to 10 points
   
-![Screenshot01](Images/Box.png)
+![Box Screenshot](Images/Box.png)
   
 ## Keys
   
-![Screenshot01](Images/Key.png)
+![Key Screenshot](Images/Key.png)
   
 There is one key in each room. If the player manages to collect all of them before time runs out, the game ends and the player wins.
 
@@ -118,7 +118,7 @@ The player can collect three different types of spells during the game:
 
 | Time Spell | Healing Spell | Power Strike |
 | ---------- | ------------- | ------------ |
-| ![Screen Shot 2022-01-03 at 23 43 25](https://user-images.githubusercontent.com/360928/147983618-1078f3b3-7477-4603-9bdf-1b45492e7013.png) | ![Screen Shot 2022-01-03 at 23 43 59](https://user-images.githubusercontent.com/360928/147983671-58bcd233-f11a-4bf3-a1a3-42dc63776836.png) | ![Screen Shot 2022-01-03 at 23 44 35](https://user-images.githubusercontent.com/360928/147983725-55e39609-e759-4749-9960-2066ca52c1d0.png) |
+| ![Red Potion Screenshot](Images/RedPotion.png) | ![Green Potion Screenshot](Images/GreenPotion.png) | ![Blue Potion Screenshot](Images/BluePotion.png) |
 
 * **Time Spell (red):**
 Adds a specified amount of time to the game. The exact amount depends on the difficulty:
